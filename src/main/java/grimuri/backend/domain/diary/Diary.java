@@ -29,7 +29,10 @@ public class Diary extends BaseTimeEntity {
     private String title;
 
     @Column(nullable = false)
-    private String content;
+    private String originalContent;
+
+    @Column(nullable = true)
+    private String shortContent;
 
     @OneToMany(mappedBy = "diary")
     private List<Image> imageList = new ArrayList<>();
