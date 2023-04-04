@@ -4,6 +4,8 @@ import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +22,21 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final ImageRepository imageRepository;
+
+    /**
+     *
+     * @param userSeq User의 Seq
+     * @param pageable Controller를 통해 입력된 Page 정보
+     * @return Page of DiaryResponseDto.DiaryResponse
+     */
+    public Page<DiaryResponseDto.DiaryResponse> getDiaryResponsePage(Long userSeq, Pageable pageable) {
+        Page<Diary> diaryPage = diaryRepository.findByUser(userSeq, pageable);
+
+        return diaryPage
+                .map(diary -> diary.getSelected() ?
+                        DiaryResponseDto.DiaryResponse.imageSelectedOf(diary)
+                        : DiaryResponseDto.DiaryResponse.imageUnSelectedOf(diary));
+    }
 
     /**
      *
