@@ -9,4 +9,6 @@ import java.util.List;
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
     List<Image> findByDiaryId(Long diaryId);
+
+    List<Image> findByDiary_User_Seq(Long userSeq);
 }
