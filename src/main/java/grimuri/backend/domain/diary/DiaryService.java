@@ -4,6 +4,8 @@ import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,11 +24,44 @@ public class DiaryService {
     private final ImageRepository imageRepository;
 
     /**
-     * 대표 이미지를 선택하지 않은 경우 diaryId의 이미지 URL 목록을 반환한다.
-     * @param diaryId
-     * @return List
+     *
+     * @param userSeq User의 Seq
+     * @param pageable Controller를 통해 입력된 Page 정보
+     * @return Page of DiaryResponseDto.DiaryResponse
      */
-    public List<DiaryResponseDto.CandidateImageUrl> getCandidateImageList(Long diaryId) {
+    public Page<DiaryResponseDto.DiaryResponse> getDiaryResponsePage(Long userSeq, Pageable pageable) {
+        Page<Diary> diaryPage = diaryRepository.findByUser(userSeq, pageable);
+
+        return diaryPage
+                .map(diary -> diary.getSelected() ?
+                        DiaryResponseDto.DiaryResponse.imageSelectedOf(diary)
+                        : DiaryResponseDto.DiaryResponse.imageUnSelectedOf(diary));
+    }
+
+    /**
+     *
+     * @param userSeq User의 Seq
+     * @return List of DiaryResponseDto.DiaryResponse
+     */
+    public List<DiaryResponseDto.DiaryResponse> getDiaryListAll(Long userSeq) {
+
+        // userSeq를 갖는 Diary들의 List
+        List<Diary> diaryList = diaryRepository.findByUser(userSeq);
+
+        // Diary의 selected에 따라서 매핑을 다르게 함.
+        return diaryList.stream()
+                .map(diary -> diary.getSelected() ?
+                        DiaryResponseDto.DiaryResponse.imageSelectedOf(diary)
+                        : DiaryResponseDto.DiaryResponse.imageUnSelectedOf(diary))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 대표 이미지를 선택하지 않은 경우 diaryId의 이미지 URL 목록을 반환한다.
+     * @param diaryId diary의 ID
+     * @return List of DiaryResponseDto.ImageUrl
+     */
+    public List<DiaryResponseDto.ImageUrl> getCandidateImageList(Long diaryId) {
 
         // 해당 diaryId가 대표 이미지를 선택했는지 여부 조회
         Boolean selectedImage = diaryRepository.existsByIdAndSelectedTrue(diaryId);
@@ -38,7 +73,7 @@ public class DiaryService {
         // diaryId의 Image 들을 CandidateImageUrl List로 변환하여 리턴
         return imageRepository.findByDiaryId(diaryId)
                 .stream()
-                .map(DiaryResponseDto.CandidateImageUrl::of)
+                .map(DiaryResponseDto.ImageUrl::of)
                 .collect(Collectors.toList());
     }
 }
