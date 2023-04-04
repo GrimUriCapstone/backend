@@ -16,7 +16,8 @@ import java.util.List;
 @Builder
 public class Diary extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "diary_id")
     private Long id;
 
@@ -32,4 +33,7 @@ public class Diary extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "diary")
     private List<Image> imageList = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Boolean selected;
 }
