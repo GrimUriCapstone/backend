@@ -21,6 +21,11 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final ImageRepository imageRepository;
 
+    /**
+     * 대표 이미지를 선택하지 않은 경우 diaryId의 이미지 URL 목록을 반환한다.
+     * @param diaryId
+     * @return List
+     */
     public List<DiaryResponseDto.CandidateImageUrl> getCandidateImageList(Long diaryId) {
 
         // 해당 diaryId가 대표 이미지를 선택했는지 여부 조회
