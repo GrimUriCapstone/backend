@@ -1,5 +1,6 @@
-package grimuri.backend.domain.diary;
+package grimuri.backend.domain.diary.controller;
 
+import grimuri.backend.domain.diary.DiaryService;
 import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageService;
@@ -18,14 +19,15 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/diary")
-public class DiaryController {
+@RequestMapping("/api/v1/diary")
+public class DiaryControllerImpl implements DiaryController {
 
     private final ImageService imageService;
     private final DiaryService diaryService;
 
     @PostMapping("")
-    public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.Create requestDto) {
+    @Override
+    public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.CreateRequest requestDto) {
         // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
         Long userSeq = 1L;
 
@@ -41,6 +43,7 @@ public class DiaryController {
      * @return
      */
     @GetMapping("/{diaryId}/image")
+    @Override
     public ResponseEntity<?> redirectToMainImage(@PathVariable Long diaryId) {
         // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
         Long userSeq = 1L;
@@ -50,7 +53,7 @@ public class DiaryController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(mainImageUrl));
 
-        return ResponseEntity.status(HttpStatus.PERMANENT_REDIRECT).headers(headers).body(null);
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).body(null);
     }
 
 
@@ -60,6 +63,7 @@ public class DiaryController {
      * @return Page of DiaryResponseDto.DiaryResponse
      */
     @GetMapping("")
+    @Override
     public ResponseEntity<Page<DiaryResponseDto.DiaryResponse>> getDiaryResponsePage(Pageable pageable) {
         // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
         Long userSeq = 1L;
@@ -74,6 +78,7 @@ public class DiaryController {
      * @return List of DiaryResponseDto.DiaryResponse
      */
     @GetMapping("/all")
+    @Override
     public ResponseEntity<List<DiaryResponseDto.DiaryResponse>> getDiaryListAll() {
 
         // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
@@ -91,6 +96,7 @@ public class DiaryController {
      * @return List of DiaryResponseDto.CandidateImageUrl
      */
     @GetMapping("/{diaryId}/images")
+    @Override
     public ResponseEntity<List<DiaryResponseDto.ImageUrl>> getCandidateImageList(@PathVariable Long diaryId) {
 
         // TODO: 인증로직 추가 후 diaryId가 사용자의 것인지 확인
