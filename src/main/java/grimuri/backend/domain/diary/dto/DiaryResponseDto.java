@@ -2,6 +2,8 @@ package grimuri.backend.domain.diary.dto;
 
 import grimuri.backend.domain.diary.Diary;
 import grimuri.backend.domain.image.Image;
+import grimuri.backend.global.SchemaDescriptionUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +20,16 @@ public class DiaryResponseDto {
     @AllArgsConstructor
     @Builder
     @ToString
+    @Schema(description = "사용자가 생성한 일기 항목의 정보")
     public static class Create {
 
+        @Schema(description = SchemaDescriptionUtils.Diary.diaryId)
         private Long diaryId;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.title)
         private String title;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
         private String originalContent;
 
         public static Create of(Diary diary) {
@@ -37,14 +45,28 @@ public class DiaryResponseDto {
     @AllArgsConstructor
     @Builder
     @ToString
+    @Schema(description = "일기 정보")
     public static class DiaryResponse {
 
+        @Schema(description = SchemaDescriptionUtils.Diary.diaryId)
         private Long diaryId;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.title)
         private String title;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
         private String originalContent;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.tags)
         private List<Tag> tags;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.imageSelected)
         private Boolean imageSelected;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.candidateImageUrls)
         private List<ImageUrl> candidateImageUrls;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.mainImageUrl)
         private ImageUrl mainImageUrl;
 
         public static DiaryResponse imageSelectedOf(Diary diary) {
@@ -78,9 +100,13 @@ public class DiaryResponseDto {
     @AllArgsConstructor
     @Builder
     @ToString
+    @Schema(description = "일기를 요약한 결과인 Tag이다. 영어 태그와 한국어 태그로 이루어져 있다.")
     public static class Tag {
 
+        @Schema(description = SchemaDescriptionUtils.Tag.engTag)
         private String engTag;
+
+        @Schema(description = SchemaDescriptionUtils.Tag.korTag)
         private String korTag;
 
         public static Tag of(String pairStr) {
@@ -103,9 +129,13 @@ public class DiaryResponseDto {
     @AllArgsConstructor
     @Builder
     @ToString
+    @Schema(description = "이미지의 정보이다. 이미지의 id와 URL로 이루어져있다.")
     public static class ImageUrl {
 
+        @Schema(description = SchemaDescriptionUtils.ImageUrl.imageId)
         private Long imageId;
+
+        @Schema(description = SchemaDescriptionUtils.ImageUrl.imageUrl)
         private String imageUrl;
 
         public static ImageUrl of(Image image) {

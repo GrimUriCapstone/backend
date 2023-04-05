@@ -34,7 +34,7 @@ public class DiaryService {
      * @param requestDto Diary 생성을 요청할 때 Body에 있는 값 (제목과 내용)
      * @return DiaryResponseDto.Create
      */
-    public DiaryResponseDto.Create createDiary(Long userSeq, DiaryRequestDto.Create requestDto) {
+    public DiaryResponseDto.Create createDiary(Long userSeq, DiaryRequestDto.CreateRequest requestDto) {
         User writer = userRepository.findById(userSeq).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user가 없습니다.");
         });
@@ -57,6 +57,7 @@ public class DiaryService {
      * @return String
      */
     public String getMainImageUrl(Long userSeq, Long diaryId) {
+        log.info("asdf");
         //       diaryId로 Diary 조회
         Diary diary = diaryRepository.findById(diaryId)
                         .orElseThrow(() -> {
