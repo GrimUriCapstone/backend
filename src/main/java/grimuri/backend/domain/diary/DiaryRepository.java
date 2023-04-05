@@ -13,9 +13,10 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     Boolean existsByIdAndSelectedTrue(Long diaryId);
 
-    List<Diary> findByUser(Long userSeq);
-
-    Page<Diary> findByUser(Long userSeq, Pageable pageable);
+    List<Diary> findByUser_Seq(Long userSeq);
 
     Optional<Diary> findById(Long diaryId);
+
+    Page<Diary> findByUser_Seq(Long userSeq, Pageable pageable);
+
 }
