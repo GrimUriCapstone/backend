@@ -30,7 +30,7 @@ public class DiaryService {
      * @return Page of DiaryResponseDto.DiaryResponse
      */
     public Page<DiaryResponseDto.DiaryResponse> getDiaryResponsePage(Long userSeq, Pageable pageable) {
-        Page<Diary> diaryPage = diaryRepository.findByUser(userSeq, pageable);
+        Page<Diary> diaryPage = diaryRepository.findByUser_Seq(userSeq, pageable);
 
         return diaryPage
                 .map(diary -> diary.getSelected() ?
@@ -46,7 +46,7 @@ public class DiaryService {
     public List<DiaryResponseDto.DiaryResponse> getDiaryListAll(Long userSeq) {
 
         // userSeq를 갖는 Diary들의 List
-        List<Diary> diaryList = diaryRepository.findByUser(userSeq);
+        List<Diary> diaryList = diaryRepository.findByUser_Seq(userSeq);
 
         // Diary의 selected에 따라서 매핑을 다르게 함.
         return diaryList.stream()
