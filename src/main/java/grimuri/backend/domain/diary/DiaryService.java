@@ -24,6 +24,34 @@ public class DiaryService {
     private final ImageRepository imageRepository;
 
     /**
+     * userSeq와 diaryId를 이용해 해당 diaryId의 대표 이미지 URL을 반환함.
+     * @param userSeq User의 Seq
+     * @param diaryId Diary의 Id
+     * @return String
+     */
+    public String getMainImageUrl(Long userSeq, Long diaryId) {
+        //       diaryId로 Diary 조회
+        Diary diary = diaryRepository.findById(diaryId)
+                        .orElseThrow(() -> {
+                            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "diaryId에 해당하는 Diary가 없습니다.");
+                        });
+
+        //        해당 diaryId가 userSeq의 것인지 확인
+        boolean userSeqCheck = diary.getUser().getSeq().equals(userSeq);
+        if (!userSeqCheck) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "userSeq의 Diary가 아닙니다.");
+        }
+
+        //        diaryId가 selected인지 아닌지 확인 (expected true)
+        if (!diary.getSelected()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아직 대표 이미지가 선택되지 않았습니다.");
+        }
+
+        //        diaryId가 갖는 대표 이미지 URL 조회
+        return diary.getImageList().get(0).getSourceUrl();
+    }
+
+    /**
      *
      * @param userSeq User의 Seq
      * @param pageable Controller를 통해 입력된 Page 정보
