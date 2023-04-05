@@ -1,5 +1,6 @@
 package grimuri.backend.domain.diary;
 
+import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,16 @@ public class DiaryController {
 
     private final ImageService imageService;
     private final DiaryService diaryService;
+
+    @PostMapping("")
+    public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.Create requestDto) {
+        // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
+        Long userSeq = 1L;
+
+        DiaryResponseDto.Create responseDto = diaryService.createDiary(userSeq, requestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
 
     /**
      * 대표 이미지 Redirect
@@ -48,7 +59,7 @@ public class DiaryController {
      * @param pageable Request를 통해 입력된 Page 정보
      * @return Page of DiaryResponseDto.DiaryResponse
      */
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<Page<DiaryResponseDto.DiaryResponse>> getDiaryResponsePage(Pageable pageable) {
         // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
         Long userSeq = 1L;
