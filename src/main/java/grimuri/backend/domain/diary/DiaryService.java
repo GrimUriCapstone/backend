@@ -1,7 +1,10 @@
 package grimuri.backend.domain.diary;
 
+import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageRepository;
+import grimuri.backend.domain.user.User;
+import grimuri.backend.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,8 +23,32 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DiaryService {
 
+    private final UserRepository userRepository;
     private final DiaryRepository diaryRepository;
     private final ImageRepository imageRepository;
+
+    /**
+     * userSeq와 DiaryRequestDto.Create를 이용해 Diary를 생성하고, 생성된 Diary의 diaryId와
+     * Diary를 이용해 DiaryResponseDto.Create 반환
+     * @param userSeq user의 Seq
+     * @param requestDto Diary 생성을 요청할 때 Body에 있는 값 (제목과 내용)
+     * @return DiaryResponseDto.Create
+     */
+    public DiaryResponseDto.Create createDiary(Long userSeq, DiaryRequestDto.Create requestDto) {
+        User writer = userRepository.findById(userSeq).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user가 없습니다.");
+        });
+
+        Diary newDiary = Diary.builder()
+                .title(requestDto.getTitle())
+                .originalContent(requestDto.getContent())
+                .selected(false)
+                .user(writer)
+                .build();
+        diaryRepository.save(newDiary);
+
+        return DiaryResponseDto.Create.of(newDiary);
+    }
 
     /**
      *
