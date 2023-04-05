@@ -4,6 +4,7 @@ import grimuri.backend.domain.BaseTimeEntity;
 import grimuri.backend.domain.image.Image;
 import grimuri.backend.domain.user.User;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class Diary extends BaseTimeEntity {
     private String shortContent;
 
     @OneToMany(mappedBy = "diary")
+    @BatchSize(size = 10)
     private List<Image> imageList = new ArrayList<>();
 
     @Column(nullable = false)
