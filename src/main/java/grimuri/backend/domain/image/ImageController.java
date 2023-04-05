@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/image")
+@RequestMapping("/api/v1/image")
 public class ImageController {
 
 
