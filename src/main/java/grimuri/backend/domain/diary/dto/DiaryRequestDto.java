@@ -1,8 +1,10 @@
 package grimuri.backend.domain.diary.dto;
 
+import grimuri.backend.global.SchemaDescriptionUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 public class DiaryRequestDto {
 
@@ -11,12 +13,15 @@ public class DiaryRequestDto {
     @AllArgsConstructor
     @Builder
     @ToString
-    public static class Create {
+    @Schema(description = "일기 생성 요청 Body")
+    public static class CreateRequest {
 
-        @NotEmpty(message = "title을 입력해주세요.")
+        @NotBlank(message = "title을 입력해주세요.")
+        @Schema(description = SchemaDescriptionUtils.Diary.title)
         private String title;
 
-        @NotEmpty(message = "content를 입력해주세요.")
+        @NotBlank(message = "content를 입력해주세요.")
+        @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
         private String content;
 
     }
