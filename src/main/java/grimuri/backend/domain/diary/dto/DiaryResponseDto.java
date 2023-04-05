@@ -18,6 +18,25 @@ public class DiaryResponseDto {
     @AllArgsConstructor
     @Builder
     @ToString
+    public static class Create {
+
+        private Long diaryId;
+        private String title;
+        private String originalContent;
+
+        public static Create of(Diary diary) {
+            return Create.builder()
+                    .diaryId(diary.getId())
+                    .title(diary.getTitle())
+                    .originalContent(diary.getOriginalContent())
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    @ToString
     public static class DiaryResponse {
 
         private Long diaryId;
