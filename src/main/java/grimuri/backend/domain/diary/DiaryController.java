@@ -29,7 +29,7 @@ public class DiaryController {
      * @param pageable Request를 통해 입력된 Page 정보
      * @return Page of DiaryResponseDto.DiaryResponse
      */
-    @GetMapping("/diary")
+    @GetMapping("/")
     public ResponseEntity<Page<DiaryResponseDto.DiaryResponse>> getDiaryResponsePage(Pageable pageable) {
         // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
         Long userSeq = 1L;
@@ -43,7 +43,7 @@ public class DiaryController {
      * 로그인된 유저의 일기 목록 전체를 조회함
      * @return List of DiaryResponseDto.DiaryResponse
      */
-    @GetMapping("/diary-all")
+    @GetMapping("/all")
     public ResponseEntity<List<DiaryResponseDto.DiaryResponse>> getDiaryListAll() {
 
         // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
