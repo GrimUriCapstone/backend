@@ -13,3 +13,7 @@ spring:
           show_sql: true
           format_sql: true
 
+logging:
+  file:
+    path: ${LOG_FILEPATH}
+    name: ${LOG_FILENAME}
