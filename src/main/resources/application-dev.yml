@@ -14,7 +14,4 @@ spring:
           format_sql: true
 logging:
   file:
-    name: grimuri_spring
-  logback:
-    rollingpolicy:
-      file-name-pattern: grimuri_spring_%d{yyyy-MM-dd}.log
+    name: grimuri_spring.log
