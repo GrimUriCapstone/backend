@@ -16,4 +16,6 @@ spring:
 logging:
   file:
     path: ${LOG_FILEPATH}
-    name: ${LOG_FILENAME}
+  logback:
+    rollingpolicy:
+      file-name-pattern: %d{yyyy-MM-dd}.log
