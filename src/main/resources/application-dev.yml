@@ -15,7 +15,6 @@ spring:
 logging:
   file:
     name: ${GRIMURI_LOG_FILENAME}
-    path: ${GRIMURI_LOG_FILEPATH}
   logback:
     rollingpolicy:
       file-name-pattern: ${GRIMURI_LOG_FILENAME}.%d{yyyy-MM-dd}.log
