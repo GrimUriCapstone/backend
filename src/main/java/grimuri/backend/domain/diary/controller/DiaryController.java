@@ -3,7 +3,7 @@ package grimuri.backend.domain.diary.controller;
 import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.global.PageableAsParameter;
-import grimuri.backend.global.SchemaDescriptionUtils;
+import grimuri.backend.global.util.SchemaDescriptionUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

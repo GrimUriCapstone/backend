@@ -1,6 +1,6 @@
 package grimuri.backend.domain.diary.dto;
 
-import grimuri.backend.global.SchemaDescriptionUtils;
+import grimuri.backend.global.util.SchemaDescriptionUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
