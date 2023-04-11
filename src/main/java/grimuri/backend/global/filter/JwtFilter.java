@@ -56,7 +56,7 @@ public class JwtFilter extends GenericFilterBean {
 
                 return;
             } catch (NoSuchElementException e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.setContentType("application/json");
                 response.getWriter().write("{\"code\":\"USER_NOT_FOUND\"}");
 
