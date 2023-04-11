@@ -4,6 +4,7 @@ import grimuri.backend.domain.diary.DiaryService;
 import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageService;
+import grimuri.backend.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -28,10 +30,9 @@ public class DiaryControllerImpl implements DiaryController {
     @PostMapping("")
     @Override
     public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.CreateRequest requestDto) {
-        // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
-        Long userSeq = 1L;
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        DiaryResponseDto.Create responseDto = diaryService.createDiary(userSeq, requestDto);
+        DiaryResponseDto.Create responseDto = diaryService.createDiary(loginUser.getUsername(), requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -45,10 +46,9 @@ public class DiaryControllerImpl implements DiaryController {
     @GetMapping("/{diaryId}/image")
     @Override
     public ResponseEntity<?> redirectToMainImage(@PathVariable Long diaryId) {
-        // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
-        Long userSeq = 1L;
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String mainImageUrl = diaryService.getMainImageUrl(userSeq, diaryId);
+        String mainImageUrl = diaryService.getMainImageUrl(loginUser.getUsername(), diaryId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(mainImageUrl));
@@ -65,10 +65,9 @@ public class DiaryControllerImpl implements DiaryController {
     @GetMapping("")
     @Override
     public ResponseEntity<Page<DiaryResponseDto.DiaryResponse>> getDiaryResponsePage(Pageable pageable) {
-        // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
-        Long userSeq = 1L;
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Page<DiaryResponseDto.DiaryResponse> diaryResponsePage = diaryService.getDiaryResponsePage(userSeq, pageable);
+        Page<DiaryResponseDto.DiaryResponse> diaryResponsePage = diaryService.getDiaryResponsePage(loginUser.getUsername(), pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(diaryResponsePage);
     }
@@ -80,11 +79,9 @@ public class DiaryControllerImpl implements DiaryController {
     @GetMapping("/all")
     @Override
     public ResponseEntity<List<DiaryResponseDto.DiaryResponse>> getDiaryListAll() {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // TODO: 인증로직 추가 후 userId를 통해 userSeq 가져와서 사용
-        Long userSeq = 1L;
-
-        List<DiaryResponseDto.DiaryResponse> diaryResponseList = diaryService.getDiaryListAll(userSeq);
+        List<DiaryResponseDto.DiaryResponse> diaryResponseList = diaryService.getDiaryListAll(loginUser.getUsername());
 
         return ResponseEntity.status(HttpStatus.OK).body(diaryResponseList);
     }
