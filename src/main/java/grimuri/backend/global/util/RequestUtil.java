@@ -23,7 +23,7 @@ public class RequestUtil {
         return parts[1];
     }
 
-    public static String getAuthorizationToken(HttpServletRequest request) {
+    public static String getAuthorizationToken(HttpServletRequest request) throws IllegalArgumentException {
         return getAuthorizationToken(request.getHeader("Authorization"));
     }
 
