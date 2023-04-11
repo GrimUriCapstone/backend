@@ -118,7 +118,15 @@ public class DiaryService {
      * @param diaryId diary의 ID
      * @return List of DiaryResponseDto.ImageUrl
      */
-    public List<DiaryResponseDto.ImageUrl> getCandidateImageList(Long diaryId) {
+    public List<DiaryResponseDto.ImageUrl> getCandidateImageList(String email, Long diaryId) {
+
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
+        });
+
+        if (!diary.getUser().getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
 
         // 해당 diaryId가 대표 이미지를 선택했는지 여부 조회
         Boolean selectedImage = diaryRepository.existsByIdAndSelectedTrue(diaryId);
