@@ -1,6 +1,18 @@
-package grimuri.backend.global;
+package grimuri.backend.global.util;
 
 public class SchemaDescriptionUtils {
+
+    public static class UserRegister {
+
+        public static final String nickname = "사용자가 사용할 별명";
+    }
+
+    public static class UserInfo {
+
+        public static final String username = "사용자의 이름";
+        public static final String email = "사용자의 이메일";
+        public static final String nickname = "사용자의 별명";
+    }
 
     public static class Diary {
         public static final String diaryId = "일기 항목의 Id";

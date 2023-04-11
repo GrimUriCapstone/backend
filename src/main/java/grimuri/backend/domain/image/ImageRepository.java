@@ -10,5 +10,5 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     List<Image> findByDiaryId(Long diaryId);
 
-    List<Image> findByDiary_User_Seq(Long userSeq);
+    List<Image> findByDiary_User_Username(Long userSeq);
 }

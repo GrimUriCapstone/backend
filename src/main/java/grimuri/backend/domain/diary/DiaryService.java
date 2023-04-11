@@ -28,14 +28,14 @@ public class DiaryService {
     private final ImageRepository imageRepository;
 
     /**
-     * userSeq와 DiaryRequestDto.Create를 이용해 Diary를 생성하고, 생성된 Diary의 diaryId와
+     * user의 email(ID)과 DiaryRequestDto.Create를 이용해 Diary를 생성하고, 생성된 Diary의 diaryId와
      * Diary를 이용해 DiaryResponseDto.Create 반환
-     * @param userSeq user의 Seq
+     * @param email user의 id
      * @param requestDto Diary 생성을 요청할 때 Body에 있는 값 (제목과 내용)
      * @return DiaryResponseDto.Create
      */
-    public DiaryResponseDto.Create createDiary(Long userSeq, DiaryRequestDto.CreateRequest requestDto) {
-        User writer = userRepository.findById(userSeq).orElseThrow(() -> {
+    public DiaryResponseDto.Create createDiary(String email, DiaryRequestDto.CreateRequest requestDto) {
+        User writer = userRepository.findById(email).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user가 없습니다.");
         });
 
@@ -51,23 +51,22 @@ public class DiaryService {
     }
 
     /**
-     * userSeq와 diaryId를 이용해 해당 diaryId의 대표 이미지 URL을 반환함.
-     * @param userSeq User의 Seq
+     * email(ID)과 diaryId를 이용해 해당 diaryId의 대표 이미지 URL을 반환함.
+     * @param email User의 id
      * @param diaryId Diary의 Id
      * @return String
      */
-    public String getMainImageUrl(Long userSeq, Long diaryId) {
-        log.info("asdf");
+    public String getMainImageUrl(String email, Long diaryId) {
         //       diaryId로 Diary 조회
         Diary diary = diaryRepository.findById(diaryId)
                         .orElseThrow(() -> {
                             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "diaryId에 해당하는 Diary가 없습니다.");
                         });
 
-        //        해당 diaryId가 userSeq의 것인지 확인
-        boolean userSeqCheck = diary.getUser().getSeq().equals(userSeq);
-        if (!userSeqCheck) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "userSeq의 Diary가 아닙니다.");
+        //        해당 diaryId가 user의 것인지 확인
+        boolean userCheck = diary.getUser().getEmail().equals(email);
+        if (!userCheck) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "user의 Diary가 아닙니다.");
         }
 
         //        diaryId가 selected인지 아닌지 확인 (expected true)
@@ -81,12 +80,12 @@ public class DiaryService {
 
     /**
      *
-     * @param userSeq User의 Seq
+     * @param email User의 id
      * @param pageable Controller를 통해 입력된 Page 정보
      * @return Page of DiaryResponseDto.DiaryResponse
      */
-    public Page<DiaryResponseDto.DiaryResponse> getDiaryResponsePage(Long userSeq, Pageable pageable) {
-        Page<Diary> diaryPage = diaryRepository.findByUser_Seq(userSeq, pageable);
+    public Page<DiaryResponseDto.DiaryResponse> getDiaryResponsePage(String email, Pageable pageable) {
+        Page<Diary> diaryPage = diaryRepository.findByUser_Email(email, pageable);
 
         return diaryPage
                 .map(diary -> diary.getSelected() ?
@@ -96,13 +95,13 @@ public class DiaryService {
 
     /**
      *
-     * @param userSeq User의 Seq
+     * @param email User의 Id
      * @return List of DiaryResponseDto.DiaryResponse
      */
-    public List<DiaryResponseDto.DiaryResponse> getDiaryListAll(Long userSeq) {
+    public List<DiaryResponseDto.DiaryResponse> getDiaryListAll(String email) {
 
-        // userSeq를 갖는 Diary들의 List
-        List<Diary> diaryList = diaryRepository.findByUser_Seq(userSeq);
+        // email에 해당하는 User가 갖는 Diary들의 List
+        List<Diary> diaryList = diaryRepository.findByUser_Email(email);
 
         // Diary의 selected에 따라서 매핑을 다르게 함.
         return diaryList.stream()
@@ -114,10 +113,20 @@ public class DiaryService {
 
     /**
      * 대표 이미지를 선택하지 않은 경우 diaryId의 이미지 URL 목록을 반환한다.
+     *
+     * @param email
      * @param diaryId diary의 ID
      * @return List of DiaryResponseDto.ImageUrl
      */
-    public List<DiaryResponseDto.ImageUrl> getCandidateImageList(Long diaryId) {
+    public List<DiaryResponseDto.ImageUrl> getCandidateImageList(String email, Long diaryId) {
+
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
+        });
+
+        if (!diary.getUser().getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
 
         // 해당 diaryId가 대표 이미지를 선택했는지 여부 조회
         Boolean selectedImage = diaryRepository.existsByIdAndSelectedTrue(diaryId);
