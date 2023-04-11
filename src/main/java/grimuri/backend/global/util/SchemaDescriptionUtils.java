@@ -1,4 +1,4 @@
-package grimuri.backend.global;
+package grimuri.backend.global.util;
 
 public class SchemaDescriptionUtils {
 
