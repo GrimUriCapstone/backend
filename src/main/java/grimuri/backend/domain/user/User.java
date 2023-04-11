@@ -18,6 +18,9 @@ import java.util.Collection;
 public class User extends BaseTimeEntity implements UserDetails {
 
     @Id
+    private String email;
+
+    @Column
     private String username;
 
     @Column

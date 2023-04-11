@@ -32,7 +32,7 @@ public class DiaryControllerImpl implements DiaryController {
     public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.CreateRequest requestDto) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        DiaryResponseDto.Create responseDto = diaryService.createDiary(loginUser.getUsername(), requestDto);
+        DiaryResponseDto.Create responseDto = diaryService.createDiary(loginUser.getEmail(), requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -48,7 +48,7 @@ public class DiaryControllerImpl implements DiaryController {
     public ResponseEntity<?> redirectToMainImage(@PathVariable Long diaryId) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String mainImageUrl = diaryService.getMainImageUrl(loginUser.getUsername(), diaryId);
+        String mainImageUrl = diaryService.getMainImageUrl(loginUser.getEmail(), diaryId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(mainImageUrl));
@@ -67,7 +67,7 @@ public class DiaryControllerImpl implements DiaryController {
     public ResponseEntity<Page<DiaryResponseDto.DiaryResponse>> getDiaryResponsePage(Pageable pageable) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Page<DiaryResponseDto.DiaryResponse> diaryResponsePage = diaryService.getDiaryResponsePage(loginUser.getUsername(), pageable);
+        Page<DiaryResponseDto.DiaryResponse> diaryResponsePage = diaryService.getDiaryResponsePage(loginUser.getEmail(), pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(diaryResponsePage);
     }
@@ -81,7 +81,7 @@ public class DiaryControllerImpl implements DiaryController {
     public ResponseEntity<List<DiaryResponseDto.DiaryResponse>> getDiaryListAll() {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<DiaryResponseDto.DiaryResponse> diaryResponseList = diaryService.getDiaryListAll(loginUser.getUsername());
+        List<DiaryResponseDto.DiaryResponse> diaryResponseList = diaryService.getDiaryListAll(loginUser.getEmail());
 
         return ResponseEntity.status(HttpStatus.OK).body(diaryResponseList);
     }
@@ -95,10 +95,9 @@ public class DiaryControllerImpl implements DiaryController {
     @GetMapping("/{diaryId}/images")
     @Override
     public ResponseEntity<List<DiaryResponseDto.ImageUrl>> getCandidateImageList(@PathVariable Long diaryId) {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // TODO: 인증로직 추가 후 diaryId가 사용자의 것인지 확인
-
-        List<DiaryResponseDto.ImageUrl> imageUrlList = diaryService.getCandidateImageList(diaryId);
+        List<DiaryResponseDto.ImageUrl> imageUrlList = diaryService.getCandidateImageList(loginUser.getEmail(), diaryId);
 
         return ResponseEntity.status(HttpStatus.OK).body(imageUrlList);
     }
