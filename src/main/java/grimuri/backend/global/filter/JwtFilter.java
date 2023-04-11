@@ -43,8 +43,13 @@ public class JwtFilter extends GenericFilterBean {
                 String authToken = RequestUtil.getAuthorizationToken(request);
                 firebaseToken = firebaseAuth.verifyIdToken(authToken);
 
+                log.debug("Request URI: {}", request.getRequestURI());
+                if (request.getRequestURI().toString().equals("/api/v1/user/signup")) {
+                    chain.doFilter(servletRequest, servletResponse);
+                }
+
                 // firebaseToken으로부터 User 정보를 가져와 SecurityContext에 저장한다.
-                UserDetails userDetails = userDetailsService.loadUserByUsername(firebaseToken.getUid());
+                UserDetails userDetails = userDetailsService.loadUserByUsername(firebaseToken.getEmail());
                 UsernamePasswordAuthenticationToken authentication
                         = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
