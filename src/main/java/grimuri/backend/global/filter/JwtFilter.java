@@ -48,6 +48,10 @@ public class JwtFilter extends GenericFilterBean {
                     chain.doFilter(servletRequest, servletResponse);
                 }
 
+                if (request.getRequestURI().toString().equals("/api/v1/image/generate")) {
+                    chain.doFilter(servletRequest, servletResponse);
+                }
+
                 // firebaseToken으로부터 User 정보를 가져와 SecurityContext에 저장한다.
                 UserDetails userDetails = userDetailsService.loadUserByUsername(firebaseToken.getEmail());
                 UsernamePasswordAuthenticationToken authentication
