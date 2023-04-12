@@ -41,4 +41,8 @@ public class Diary extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Boolean selected;
+
+    public void saveTags(String tagStr) {
+        this.shortContent = tagStr;
+    }
 }

@@ -46,6 +46,8 @@ public class SecurityConfig {
                     .permitAll()
                 .antMatchers("/api/v1/user/signup")
                     .permitAll()
+                .antMatchers("/api/v1/image/generate")
+                    .permitAll()    // TODO: 추후 이 엔드포인트에도 인증 적용해야 함. (이미지 생성용 ADMIN 계정, ADMIN만 접근 가능하도록)
                 .anyRequest()
                     .hasAnyRole("ADMIN", "USER")
 
