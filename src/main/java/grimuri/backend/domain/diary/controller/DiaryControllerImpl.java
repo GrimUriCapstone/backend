@@ -1,6 +1,6 @@
 package grimuri.backend.domain.diary.controller;
 
-import grimuri.backend.domain.diary.DiaryService;
+import grimuri.backend.domain.diary.service.DiaryService;
 import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageService;

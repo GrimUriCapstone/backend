@@ -1,5 +1,9 @@
-package grimuri.backend.domain.diary;
+package grimuri.backend.domain.diary.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import grimuri.backend.domain.diary.Diary;
+import grimuri.backend.domain.diary.DiaryRepository;
+import grimuri.backend.domain.diary.dto.DiaryMessageDto;
 import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
 import grimuri.backend.domain.image.ImageRepository;
@@ -27,12 +31,15 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final ImageRepository imageRepository;
 
+    private final SqsSenderService senderService;
+
     /**
      * user의 email(ID)과 DiaryRequestDto.Create를 이용해 Diary를 생성하고, 생성된 Diary의 diaryId와
-     * Diary를 이용해 DiaryResponseDto.Create 반환
+     * Diary를 이용해 DiaryResponseDto.Create 반환. 메시지 큐에 이미지 생성 요청 정보를 저장한다.
      * @param email user의 id
      * @param requestDto Diary 생성을 요청할 때 Body에 있는 값 (제목과 내용)
      * @return DiaryResponseDto.Create
+     * @throws ResponseStatusException
      */
     public DiaryResponseDto.Create createDiary(String email, DiaryRequestDto.CreateRequest requestDto) {
         User writer = userRepository.findById(email).orElseThrow(() -> {
@@ -46,6 +53,12 @@ public class DiaryService {
                 .user(writer)
                 .build();
         diaryRepository.save(newDiary);
+
+        try {
+            senderService.sendMessage(DiaryMessageDto.Generate.of(newDiary));
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
 
         return DiaryResponseDto.Create.of(newDiary);
     }
