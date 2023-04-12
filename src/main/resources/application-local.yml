@@ -22,3 +22,15 @@ spring:
 logging:
   level:
     grimuri: debug
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${SQS_ACCESS_KEY}
+      secret-key: ${SQS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    sqs:
+      endpoint: ${SQS_ENDPOINT}
