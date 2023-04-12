@@ -20,7 +20,7 @@ public class ImageRequestDto {
         private Long diaryId;
 
         @Schema(description = SchemaDescriptionUtils.ImageComplete.tags)
-        private List<Tag> tags;
+        private List<TagResult> tags;
 
         @Schema(description = SchemaDescriptionUtils.UserInfo.email)
         private String userEmail;
@@ -35,7 +35,7 @@ public class ImageRequestDto {
     @Builder
     @ToString
     @Schema(description = "일기를 요약한 결과인 Tag이다. 영어 태그와 한국어 태그로 이루어져 있다.")
-    public static class Tag {
+    public static class TagResult {
 
         @Schema(description = SchemaDescriptionUtils.Tag.korTag)
         private String kor;
