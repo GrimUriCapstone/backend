@@ -2,6 +2,11 @@ package grimuri.backend.global.util;
 
 public class SchemaDescriptionUtils {
 
+    public static class ImageComplete {
+        public static final String tags = "일기의 요약된 태그 목록";
+        public static final String images = "이미지들의 S3 접근 URL";
+    }
+
     public static class UserRegister {
 
         public static final String nickname = "사용자가 사용할 별명";
