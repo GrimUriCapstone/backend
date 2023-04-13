@@ -1,3 +1,10 @@
+server:
+  ssl:
+    key-store: ${KEY_STORE}
+    key-store-type: PKCS12
+    key-store-password: ${KEY_STORE_PASSWORD}
+  http2:
+    enabled: true
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
