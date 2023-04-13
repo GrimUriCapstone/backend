@@ -81,7 +81,7 @@ public class JwtFilter extends GenericFilterBean {
                 return;
             }
         } else {
-            if (!request.getRequestURI().startsWith("/swagger-ui")) {
+            if (!request.getRequestURI().startsWith("/swagger-ui") && !request.getRequestURI().startsWith("/api-docs")) {
                 log.debug("Request URI={}, Authorization 헤더 없음.", request.getRequestURI());
                 log.debug("\tRequest Remote Info={}:{}", request.getRemoteAddr(), request.getRemotePort());
             }
