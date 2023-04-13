@@ -58,6 +58,9 @@ public class JwtFilter extends GenericFilterBean {
                         = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                log.debug("Request URI={}, User={}", request.getRequestURI(), authentication.getPrincipal().toString());
+                log.debug("\tRequest Remote Info={}:{}", request.getRemoteAddr(), request.getRemotePort());
             } catch (IllegalArgumentException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.setContentType("application/json");
@@ -78,7 +81,8 @@ public class JwtFilter extends GenericFilterBean {
                 return;
             }
         } else {
-            log.debug("Authorization 헤더 없음.");
+            log.debug("Request URI={}, Authorization 헤더 없음.", request.getRequestURI());
+            log.debug("\tRequest Remote Info={}:{}", request.getRemoteAddr(), request.getRemotePort());
         }
 
         chain.doFilter(request, response);
