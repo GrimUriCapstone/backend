@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -19,7 +20,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -73,10 +73,10 @@ public class JwtFilter extends GenericFilterBean {
                 response.getWriter().write("{\"code\":\"INVALID_TOKEN\", \"message\":\"" + e.getMessage() + "\"}");
 
                 return;
-            } catch (NoSuchElementException e) {
+            } catch (UsernameNotFoundException e) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.setContentType("application/json");
-                response.getWriter().write("{\"code\":\"USER_NOT_FOUND\"}");
+                response.getWriter().write("{\"code\":\"USER_NOT_FOUND\", \"message\":\"\"" + e.getMessage() + "\"}");
 
                 return;
             }

@@ -50,6 +50,8 @@ public interface UserController {
                     content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, 유효하지 않은 토큰임.",
                     content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found, 등록되지 않은 사용자임.",
+                    content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(schema = @Schema(hidden = true)))
     })
