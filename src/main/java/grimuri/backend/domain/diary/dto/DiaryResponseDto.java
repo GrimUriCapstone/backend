@@ -76,7 +76,7 @@ public class DiaryResponseDto {
                     .originalContent(diary.getOriginalContent())
                     .tags(Tag.listOf(diary))
                     .imageSelected(true)
-                    .candidateImageUrls(null)
+                    .candidateImageUrls(new ArrayList<>())
                     .mainImageUrl(ImageUrl.of(diary.getImageList().get(0)))
                     .build();
         }
