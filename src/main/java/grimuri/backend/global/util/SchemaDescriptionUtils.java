@@ -2,6 +2,12 @@ package grimuri.backend.global.util;
 
 public class SchemaDescriptionUtils {
 
+    public static class AfterSignup {
+        public static final String username = "사용자의 이름";
+        public static final String email = "사용자의 이메일";
+        public static final String nickname = "사용자의 별명";
+    }
+
     public static class ImageComplete {
         public static final String tags = "일기의 요약된 태그 목록";
         public static final String images = "이미지들의 S3 접근 URL";
@@ -17,6 +23,7 @@ public class SchemaDescriptionUtils {
         public static final String username = "사용자의 이름";
         public static final String email = "사용자의 이메일";
         public static final String nickname = "사용자의 별명";
+        public static final String profileImage = "사용자의 프로필 이미지";
     }
 
     public static class Diary {

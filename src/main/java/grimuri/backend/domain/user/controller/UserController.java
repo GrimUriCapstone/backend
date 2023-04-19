@@ -23,7 +23,7 @@ public interface UserController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Created, 정상적으로 등록되었음.",
-                content = @Content(schema = @Schema(implementation = UserResponseDto.UserInfo.class))),
+                content = @Content(schema = @Schema(implementation = UserResponseDto.AfterSignup.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, Header가 잘못되었음.",
                     content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, 유효하지 않은 토큰임.",
@@ -32,7 +32,7 @@ public interface UserController {
                     content = @Content(schema = @Schema(hidden = true)))
     })
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<UserResponseDto.UserInfo> signup(
+    ResponseEntity<UserResponseDto.AfterSignup> signup(
             @Parameter(description = "Authorization Header", in = ParameterIn.HEADER, required = true)
             @RequestHeader("Authorization") String authorization,
                                                     @RequestBody UserRequestDto.Register registration);
