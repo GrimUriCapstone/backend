@@ -27,6 +27,21 @@ public class DiaryControllerImpl implements DiaryController {
     private final ImageService imageService;
     private final DiaryService diaryService;
 
+    /**
+     * 개별 일기 단건 조회. diaryId를 받아 개별 일기를 조회한다.
+     * @param diaryId 조회하려는 일기의 diaryId
+     * @return DiaryResponseDto.DiaryResponse
+     */
+    @GetMapping("/{diaryId}")
+    @Override
+    public ResponseEntity<DiaryResponseDto.DiaryResponse> getDiary(@PathVariable Long diaryId) {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        DiaryResponseDto.DiaryResponse responseDto = diaryService.getDiary(loginUser.getEmail(), diaryId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
     @PostMapping("")
     @Override
     public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.CreateRequest requestDto) {
