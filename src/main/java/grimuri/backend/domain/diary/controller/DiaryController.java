@@ -28,6 +28,28 @@ import java.util.List;
 public interface DiaryController {
 
     @Operation(
+            summary = "개별 일기 조회",
+            description = "diaryId를 입력받아 개별 일기를 조회한다.",
+            tags = { "DiaryController" }
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok.",
+                    content = @Content(schema = @Schema(implementation = DiaryResponseDto.DiaryResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request. Diary가 사용자의 것이 아님.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, 권한 없음.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found. diaryId에 해당하는 일기 존재하지 않음.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(schema = @Schema(hidden = true)))
+    })
+    @ResponseStatus(HttpStatus.OK)
+    ResponseEntity<DiaryResponseDto.DiaryResponse> getDiary(
+            @Parameter(description = SchemaDescriptionUtils.Diary.diaryId, in = ParameterIn.PATH)
+            @PathVariable Long diaryId);
+
+    @Operation(
             summary = "일기 생성",
             description = "제목(title)과 일기 내용(content)를 입력받아, Diary를 생성하고 저장한다.",
             tags = { "DiaryController" }

@@ -34,6 +34,29 @@ public class DiaryService {
     private final SqsSenderService senderService;
 
     /**
+     * 사용자의 email 주소와 일기의 diaryId를 통해 사용자의 단건 diary를 조회한 뒤 DiaryResponseDto.DiaryResponse를 반환한다.
+     * @param email 사용자의 email (PK)
+     * @param diaryId 조회하려는 일기의 diaryId
+     * @return DiaryResponseDto.DiaryResponse
+     */
+    public DiaryResponseDto.DiaryResponse getDiary(String email, Long diaryId) {
+        // diaryId로 Diary 조회
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
+        });
+
+        if (!findDiary.getUser().getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
+
+        if (findDiary.getSelected()) {
+            return DiaryResponseDto.DiaryResponse.imageSelectedOf(findDiary);
+        } else {
+            return DiaryResponseDto.DiaryResponse.imageUnSelectedOf(findDiary);
+        }
+    }
+
+    /**
      * user의 email(ID)과 DiaryRequestDto.Create를 이용해 Diary를 생성하고, 생성된 Diary의 diaryId와
      * Diary를 이용해 DiaryResponseDto.Create 반환. 메시지 큐에 이미지 생성 요청 정보를 저장한다.
      * @param email user의 id
