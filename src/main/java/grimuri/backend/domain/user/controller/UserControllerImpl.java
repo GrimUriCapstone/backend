@@ -23,32 +23,33 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
 
     /**
-     *
      * @param authorization Authorization Header
-     * @param registration 사용자 등록 추가 정보
-     * @return ResponseEntity
+     * @param registration  사용자 등록 추가 정보
+     * @return ResponseEntity - UserResponseDto.AfterSignup
      */
     @PostMapping("/signup")
     @Override
-    public ResponseEntity<UserResponseDto.UserInfo> signup(@RequestHeader("Authorization") String authorization,
-                                 @RequestBody UserRequestDto.Register registration) {
+    public ResponseEntity<UserResponseDto.AfterSignup> signup(@RequestHeader("Authorization") String authorization,
+                                                              @RequestBody UserRequestDto.Register registration) {
         FirebaseToken firebaseToken = userService.getFirebaseToken(firebaseAuth, authorization);
         User registeredUser
                 = userService.register(firebaseToken, registration);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDto.UserInfo.of(registeredUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDto.AfterSignup.of(registeredUser));
     }
 
     /**
      *
      * @param authorization Authorization Header
-     * @return ResponseEntity
+     * @return ResponseEntity - UserResponseDto.UserInfo
      */
     @GetMapping("/whoami")
     @Override
     public ResponseEntity<UserResponseDto.UserInfo> getUserInfo(@RequestHeader("Authorization") String authorization) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.OK).body(UserResponseDto.UserInfo.of(loginUser));
+        FirebaseToken firebaseToken = userService.getFirebaseToken(firebaseAuth, authorization);
+
+        return ResponseEntity.status(HttpStatus.OK).body(UserResponseDto.UserInfo.of(loginUser, firebaseToken.getPicture()));
     }
 }
