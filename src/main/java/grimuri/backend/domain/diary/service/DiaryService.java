@@ -45,10 +45,12 @@ public class DiaryService {
     public void selectDiaryImage(String email, Long diaryId, Long imageId) {
         // diaryId로 Diary 조회
         Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            log.debug("\t해당 diaryId의 Diary가 존재하지 않습니다.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
         });
 
         if (!findDiary.getUser().getEmail().equals(email)) {
+            log.debug("\tUser의 Diary가 아닙니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
         }
 
@@ -57,6 +59,7 @@ public class DiaryService {
         // imageId 존재하는지 확인
         boolean imageExists = imageList.stream().anyMatch(image -> image.getId().equals(imageId));
         if (!imageExists) {
+            log.debug("\t해당 이미지가 일기에 존재하지 않습니다.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이미지가 일기에 존재하지 않습니다");
         }
 
@@ -80,10 +83,12 @@ public class DiaryService {
     public DiaryResponseDto.DiaryResponse getDiary(String email, Long diaryId) {
         // diaryId로 Diary 조회
         Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            log.debug("\t해당 diaryId의 Diary가 존재하지 않습니다.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
         });
 
         if (!findDiary.getUser().getEmail().equals(email)) {
+            log.debug("\tUser의 Diary가 아닙니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
         }
 
@@ -104,6 +109,7 @@ public class DiaryService {
      */
     public DiaryResponseDto.Create createDiary(String email, DiaryRequestDto.CreateRequest requestDto) {
         User writer = userRepository.findById(email).orElseThrow(() -> {
+            log.debug("\tUser가 없습니다.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user가 없습니다.");
         });
 
@@ -116,6 +122,7 @@ public class DiaryService {
         diaryRepository.save(newDiary);
 
         try {
+            log.debug("\tSender Service SendMessage 호출.");
             senderService.sendMessage(DiaryMessageDto.Generate.of(newDiary));
         } catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
