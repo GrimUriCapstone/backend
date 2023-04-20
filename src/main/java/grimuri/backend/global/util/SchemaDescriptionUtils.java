@@ -10,7 +10,7 @@ public class SchemaDescriptionUtils {
 
     public static class ImageComplete {
         public static final String tags = "일기의 요약된 태그 목록";
-        public static final String images = "이미지들의 S3 접근 URL";
+        public static final String images = "이미지들의 스토리지 접근 URL";
     }
 
     public static class UserRegister {
@@ -45,10 +45,10 @@ public class SchemaDescriptionUtils {
         public static final String korTag = "한국어 태그";
     }
 
-    public static class ImageUrl {
+    public static class Image {
 
         public static final String imageId = "이미지의 Id";
-        public static final String imageUrl = "이미지의 S3 URL";
+        public static final String imageUrl = "이미지의 스토리지 URL";
     }
 
 }
