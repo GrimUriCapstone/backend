@@ -11,6 +11,7 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,6 +120,10 @@ public class DiaryResponseDto {
         }
 
         public static List<Tag> listOf(Diary diary) {
+            if (diary.getShortContent() == null) {
+                return Collections.emptyList();
+            }
+
             return Arrays.stream(diary.getShortContent().split(","))
                     .map(Tag::of)
                     .collect(Collectors.toList());
