@@ -6,6 +6,7 @@ import grimuri.backend.domain.diary.DiaryRepository;
 import grimuri.backend.domain.diary.dto.DiaryMessageDto;
 import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
+import grimuri.backend.domain.image.Image;
 import grimuri.backend.domain.image.ImageRepository;
 import grimuri.backend.domain.user.User;
 import grimuri.backend.domain.user.UserRepository;
@@ -32,6 +33,44 @@ public class DiaryService {
     private final ImageRepository imageRepository;
 
     private final SqsSenderService senderService;
+
+    /**
+     * 일기의 후보 이미지들 중 하나를 대표 이미지로 선택한다. diaryId로 일기와 일기의 후보 이미지 목록을 조회한다.
+     * 이후 imageId에 해당하는 이미지만 남기고 나머지 후보 이미지들은 제거한다.
+     * 일기의 selected는 true로 바꾼다.
+     * @param email 사용자의 email (PK)
+     * @param diaryId 대표 이미지를 선택하려는 일기의 diaryId
+     * @param imageId 대표 이미지로 선택하려는 이미지의 imageId
+     */
+    public void selectDiaryImage(String email, Long diaryId, Long imageId) {
+        // diaryId로 Diary 조회
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
+        });
+
+        if (!findDiary.getUser().getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
+
+        List<Image> imageList = findDiary.getImageList();
+
+        // imageId 존재하는지 확인
+        boolean imageExists = imageList.stream().anyMatch(image -> image.getId().equals(imageId));
+        if (!imageExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이미지가 일기에 존재하지 않습니다");
+        }
+
+        // imageList에서 imageId 빼고 나머지 후보들 제거
+        // TODO: 개선점!
+        for (Image image : imageList) {
+            if (!image.getId().equals(imageId)) {
+                imageRepository.delete(image);
+                imageList.remove(image);
+            }
+        }
+
+        findDiary.setSelected(true);
+    }
 
     /**
      * 사용자의 email 주소와 일기의 diaryId를 통해 사용자의 단건 diary를 조회한 뒤 DiaryResponseDto.DiaryResponse를 반환한다.
