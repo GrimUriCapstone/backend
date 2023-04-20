@@ -65,7 +65,6 @@ public class DiaryService {
         for (Image image : imageList) {
             if (!image.getId().equals(imageId)) {
                 imageRepository.delete(image);
-                imageList.remove(image);
             }
         }
 
