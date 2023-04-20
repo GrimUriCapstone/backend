@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import grimuri.backend.domain.diary.dto.DiaryMessageDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SqsSenderService {
 
     @Value("${cloud.aws.sqs.endpoint}")
@@ -30,6 +32,7 @@ public class SqsSenderService {
      * @throws JsonProcessingException
      */
     public SendMessageResult sendMessage(DiaryMessageDto.Generate message) throws JsonProcessingException {
+        log.debug("\tGenerate Message: {}", message.toString());
         SendMessageRequest sendMessageRequest = new SendMessageRequest(sqsEndpoint, objectMapper.writeValueAsString(message));
 
         return amazonSQS.sendMessage(sendMessageRequest);
