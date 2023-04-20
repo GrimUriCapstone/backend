@@ -132,10 +132,10 @@ public class DiaryResponseDto {
     @Schema(description = "이미지의 정보이다. 이미지의 id와 URL로 이루어져있다.")
     public static class ImageUrl {
 
-        @Schema(description = SchemaDescriptionUtils.ImageUrl.imageId)
+        @Schema(description = SchemaDescriptionUtils.Image.imageId)
         private Long imageId;
 
-        @Schema(description = SchemaDescriptionUtils.ImageUrl.imageUrl)
+        @Schema(description = SchemaDescriptionUtils.Image.imageUrl)
         private String imageUrl;
 
         public static ImageUrl of(Image image) {
