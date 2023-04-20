@@ -28,6 +28,31 @@ import java.util.List;
 public interface DiaryController {
 
     @Operation(
+            summary = "대표 이미지 선택",
+            description = "diaryId와 imageId를 입력받아, 일기의 후보 이미지 중에 하나를 대표 이미지로 선택한다.",
+            tags = { "DiaryController" }
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok.",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request. Diary가 사용자의 것이 아님.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, 권한 없음.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found. diaryId에 해당하는 일기 존재하지 않거나, 이미지가 일기에 존재하지 않음.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(schema = @Schema(hidden = true)))
+    })
+    @ResponseStatus(HttpStatus.OK)
+    ResponseEntity<?> selectDiaryImage(
+            @Parameter(description = SchemaDescriptionUtils.Diary.diaryId, in = ParameterIn.PATH)
+            @PathVariable Long diaryId,
+            @Parameter(description = SchemaDescriptionUtils.Image.imageId, in = ParameterIn.PATH)
+            @PathVariable Long imageId
+    );
+
+    @Operation(
             summary = "개별 일기 조회",
             description = "diaryId를 입력받아 개별 일기를 조회한다.",
             tags = { "DiaryController" }
