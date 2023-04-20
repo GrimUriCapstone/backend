@@ -28,6 +28,21 @@ public class DiaryControllerImpl implements DiaryController {
     private final DiaryService diaryService;
 
     /**
+     * 로그인된 사용자의 diaryId에 해당하는 일기를 삭제한다.
+     * @param diaryId 삭제하려는 일기의 diaryId
+     * @return "success" String
+     */
+    @DeleteMapping("/{diaryId}")
+    @Override
+    public ResponseEntity<String> deleteDiary(@PathVariable Long diaryId) {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        diaryService.deleteDiary(loginUser.getEmail(), diaryId);
+
+        return ResponseEntity.status(HttpStatus.OK).body("success");
+    }
+
+    /**
      * 개별 일기 단건 조회. diaryId를 받아 개별 일기를 조회한다.
      * @param diaryId 조회하려는 일기의 diaryId
      * @return DiaryResponseDto.DiaryResponse

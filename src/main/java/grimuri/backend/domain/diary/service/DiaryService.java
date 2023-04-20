@@ -34,6 +34,23 @@ public class DiaryService {
     private final SqsSenderService senderService;
 
     /**
+     * 사용자의 email 주소와 일기의 diaryId를 통해 사용자의 단건 일기를 삭제한다.
+     * @param email 사용자의 email (PK)
+     * @param diaryId 삭제하려는 일기의 diaryId
+     */
+    public void deleteDiary(String email, Long diaryId) {
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
+        });
+
+        if (!findDiary.getUser().getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
+
+        diaryRepository.delete(findDiary);
+    }
+
+    /**
      * 사용자의 email 주소와 일기의 diaryId를 통해 사용자의 단건 diary를 조회한 뒤 DiaryResponseDto.DiaryResponse를 반환한다.
      * @param email 사용자의 email (PK)
      * @param diaryId 조회하려는 일기의 diaryId
