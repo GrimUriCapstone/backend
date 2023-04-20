@@ -38,6 +38,7 @@ public class DiaryControllerImpl implements DiaryController {
     public ResponseEntity<?> selectDiaryImage(@PathVariable Long diaryId, @PathVariable Long imageId) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        log.debug("\tSelect Diary Image, diaryId: {}, imageId: {}", diaryId, imageId);
         diaryService.selectDiaryImage(loginUser.getEmail(), diaryId, imageId);
 
         return ResponseEntity.status(HttpStatus.OK).body("select success");
@@ -63,6 +64,7 @@ public class DiaryControllerImpl implements DiaryController {
     public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.CreateRequest requestDto) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        log.debug("\tCreate Diary Request Body: {}", requestDto.toString());
         DiaryResponseDto.Create responseDto = diaryService.createDiary(loginUser.getEmail(), requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
