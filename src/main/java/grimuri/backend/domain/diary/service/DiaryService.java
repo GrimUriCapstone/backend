@@ -63,6 +63,12 @@ public class DiaryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이미지가 일기에 존재하지 않습니다");
         }
 
+        // 아직 후보 이미지가 생성되지 않은 경우 exception
+        if (!findDiary.getImageCreated()) {
+            log.debug("\t아직 후보 이미지들이 생성되지 않았습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아직 후보 이미지들이 생성되지 않았습니다.");
+        }
+
         // imageList에서 imageId 빼고 나머지 후보들 제거
         // TODO: 개선점!
         for (Image image : imageList) {
@@ -117,6 +123,7 @@ public class DiaryService {
                 .title(requestDto.getTitle())
                 .originalContent(requestDto.getContent())
                 .selected(false)
+                .imageCreated(false)
                 .user(writer)
                 .build();
         diaryRepository.save(newDiary);
@@ -207,6 +214,12 @@ public class DiaryService {
 
         if (!diary.getUser().getEmail().equals(email)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
+
+        // 아직 후보 이미지가 생성되지 않은 경우 exception
+        if (!diary.getImageCreated()) {
+            log.debug("\t아직 후보 이미지들이 생성되지 않았습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아직 후보 이미지들이 생성되지 않았습니다.");
         }
 
         // 해당 diaryId가 대표 이미지를 선택했는지 여부 조회
