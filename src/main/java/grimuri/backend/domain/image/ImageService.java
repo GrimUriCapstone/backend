@@ -37,6 +37,7 @@ public class ImageService {
                 .map(tag -> tag.getEng() + ":" + tag.getKor())
                 .collect(Collectors.joining(","));
         findDiary.saveTags(tagStr);
+        findDiary.setImageCreated(true);
 
         request.getImages().forEach(url -> {
             Image eachImage = Image.builder()
