@@ -16,4 +16,17 @@ public class UserRequestDto {
         @Schema(description = SchemaDescriptionUtils.UserRegister.nickname)
         private String nickname;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    @Schema(description = "로그인 후 FCM 토큰 정보 전송")
+    public static class FCMTokenRequest {
+
+        @Schema(description = SchemaDescriptionUtils.FCMToken.fcm_token)
+        private String fcm_token;
+    }
+
 }

@@ -2,6 +2,7 @@ package grimuri.backend.domain.user.controller;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
+import grimuri.backend.domain.fcm.FCMTokenService;
 import grimuri.backend.domain.user.User;
 import grimuri.backend.domain.user.UserService;
 import grimuri.backend.domain.user.dto.UserRequestDto;
@@ -21,6 +22,17 @@ public class UserControllerImpl implements UserController {
 
     private final FirebaseAuth firebaseAuth;
     private final UserService userService;
+    private final FCMTokenService fcmTokenService;
+
+    @PostMapping("/fcmtoken")
+    @Override
+    public ResponseEntity<?> postLoginFCMToken(@RequestBody UserRequestDto.FCMTokenRequest tokenRequest) {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        fcmTokenService.registerFCMToken(loginUser.getEmail(), tokenRequest.getFcm_token());
+
+        return ResponseEntity.status(HttpStatus.OK).body("success");
+    }
 
     /**
      * @param authorization Authorization Header
