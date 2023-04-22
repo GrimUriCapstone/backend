@@ -34,7 +34,7 @@ public class ImageService {
 
 
     @Async
-    public void saveImageWithDiary(ImageRequestDto.Complete request) {
+    public void saveImageWithDiaryAndNotify(ImageRequestDto.Complete request) {
         Diary findDiary = diaryRepository.findById(request.getDiaryId()).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Diary가 존재하지 않습니다.");
         });
@@ -87,10 +87,19 @@ public class ImageService {
                 .setBody("일기 \"" + diaryTitle + "\"의 이미지 생성이 완료되었습니다.")
                 .build();
 
+        WebpushFcmOptions fcmOptions = WebpushFcmOptions.builder()
+                .setLink("/select/" + diaryId.toString())
+                .build();
+
+        WebpushConfig webpushConfig = WebpushConfig.builder()
+                .setFcmOptions(fcmOptions)
+                .build();
+
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(notification)
                 .putData("diaryId", String.valueOf(diaryId))
                 .putData("diaryTitle", diaryTitle)
+                .setWebpushConfig(webpushConfig)
                 .addAllTokens(tokenList.stream().map(FCMToken::getToken).collect(Collectors.toList()))
                 .build();
 
