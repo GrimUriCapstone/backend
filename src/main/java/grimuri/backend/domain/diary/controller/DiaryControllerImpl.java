@@ -34,13 +34,14 @@ public class DiaryControllerImpl implements DiaryController {
      * @return DiaryResponseDto.DiaryResponse 수정된 일기의 내용
      */
     @PutMapping("/{diaryId")
+    @Override
     public ResponseEntity<DiaryResponseDto.DiaryResponse> modifyDiary(@PathVariable Long diaryId,
                                                                       @RequestBody DiaryRequestDto.ModifyRequest request) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         DiaryResponseDto.DiaryResponse modifyResponse = diaryService.modifyDiary(loginUser.getEmail(), diaryId, request);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(modifyResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(modifyResponse);
     }
 
     /**
