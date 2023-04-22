@@ -25,4 +25,21 @@ public class DiaryRequestDto {
         private String content;
 
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    @Schema(description = "일기 수정 요청 Body")
+    public static class ModifyRequest {
+        @NotBlank(message = "title을 입력해주세요.")
+        @Schema(description = SchemaDescriptionUtils.Diary.title)
+        private String title;
+
+        @NotBlank(message = "content를 입력해주세요.")
+        @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
+        private String content;
+    }
+
 }
