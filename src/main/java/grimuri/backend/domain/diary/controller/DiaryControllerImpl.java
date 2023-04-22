@@ -33,7 +33,7 @@ public class DiaryControllerImpl implements DiaryController {
      * @param request DiaryRequestDto.ModifyRequest 수정 제목과 수정 내용
      * @return DiaryResponseDto.DiaryResponse 수정된 일기의 내용
      */
-    @PutMapping("/{diaryId")
+    @PutMapping("/{diaryId}")
     @Override
     public ResponseEntity<DiaryResponseDto.DiaryResponse> modifyDiary(@PathVariable Long diaryId,
                                                                       @RequestBody DiaryRequestDto.ModifyRequest request) {
