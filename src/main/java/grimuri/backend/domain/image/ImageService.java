@@ -78,6 +78,10 @@ public class ImageService {
      * @throws FirebaseMessagingException
      */
     public void notifyImageComplete(List<FCMToken> tokenList, Long diaryId, String diaryTitle) throws FirebaseMessagingException {
+        if (tokenList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FCM Token이 하나도 없습니다.");
+        }
+
         Notification notification = Notification.builder()
                 .setTitle("이미지 생성 완료!")
                 .setBody("일기 \"" + diaryTitle + "\"의 이미지 생성이 완료되었습니다.")
