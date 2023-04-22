@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,6 +71,13 @@ public class DiaryResponseDto {
         @Schema(description = SchemaDescriptionUtils.Diary.mainImageUrl)
         private ImageUrl mainImageUrl;
 
+        @Schema(description = SchemaDescriptionUtils.Diary.createdAt)
+        private LocalDateTime createdAt;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.modifiedAt)
+        private LocalDateTime modifiedAt;
+
+
         public static DiaryResponse imageSelectedOf(Diary diary) {
             return DiaryResponse.builder()
                     .diaryId(diary.getId())
@@ -79,6 +87,8 @@ public class DiaryResponseDto {
                     .imageSelected(true)
                     .candidateImageUrls(new ArrayList<>())
                     .mainImageUrl(ImageUrl.of(diary.getImageList().get(0)))
+                    .createdAt(diary.getCreatedAt())
+                    .modifiedAt(diary.getModifiedAt())
                     .build();
         }
 
@@ -93,6 +103,8 @@ public class DiaryResponseDto {
                             .stream().map(ImageUrl::of)
                             .collect(Collectors.toList()))
                     .mainImageUrl(null)
+                    .createdAt(diary.getCreatedAt())
+                    .modifiedAt(diary.getModifiedAt())
                     .build();
         }
     }

@@ -36,6 +36,8 @@ public class SchemaDescriptionUtils {
                 "대표 이미지가 선택된 일기의 경우 해당 항목은 빈 값이다.";
         public static final String mainImageUrl = "일기의 대표 이미지 정보. 대표 이미지가 선택되었을 경우에만 존재하며," +
                 "대표 이미지가 선택되지 않은 경우 해당 항목은 빈 값이다.";
+        public static final String createdAt = "일기 작성 시간";
+        public static final String modifiedAt = "일기 수정 시간";
 
     }
 
