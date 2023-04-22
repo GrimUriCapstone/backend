@@ -2,6 +2,10 @@ package grimuri.backend.global.util;
 
 public class SchemaDescriptionUtils {
 
+    public static class FCMToken {
+        public static final String fcm_token = "사용자가 로그인한 기기의 FCM 토큰";
+    }
+
     public static class AfterSignup {
         public static final String username = "사용자의 이름";
         public static final String email = "사용자의 이메일";
