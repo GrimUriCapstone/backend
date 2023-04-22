@@ -60,6 +60,23 @@ public class DiaryControllerImpl implements DiaryController {
     }
 
     /**
+     * 일기의 후보 이미지들 중 하나를 대표 이미지로 선택한다.
+     * @param diaryId 대표 이미지를 선택하려는 일기의 diaryId
+     * @param imageId 대표 이미지로 선택하려는 이미지의 imageId
+     * @return
+     */
+    @PostMapping("/{diaryId}/image/{imageId}")
+    @Override
+    public ResponseEntity<?> selectDiaryImage(@PathVariable Long diaryId, @PathVariable Long imageId) {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.debug("\tSelect Diary Image, diaryId: {}, imageId: {}", diaryId, imageId);
+        diaryService.selectDiaryImage(loginUser.getEmail(), diaryId, imageId);
+
+        return ResponseEntity.status(HttpStatus.OK).body("select success");
+    }
+
+    /**
      * 개별 일기 단건 조회. diaryId를 받아 개별 일기를 조회한다.
      * @param diaryId 조회하려는 일기의 diaryId
      * @return DiaryResponseDto.DiaryResponse
@@ -79,6 +96,7 @@ public class DiaryControllerImpl implements DiaryController {
     public ResponseEntity<DiaryResponseDto.Create> createDiary(@RequestBody DiaryRequestDto.CreateRequest requestDto) {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        log.debug("\tCreate Diary Request Body: {}", requestDto.toString());
         DiaryResponseDto.Create responseDto = diaryService.createDiary(loginUser.getEmail(), requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);

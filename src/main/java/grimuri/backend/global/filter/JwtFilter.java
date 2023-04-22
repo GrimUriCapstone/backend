@@ -3,6 +3,7 @@ package grimuri.backend.global.filter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
+import grimuri.backend.domain.user.User;
 import grimuri.backend.global.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,6 @@ public class JwtFilter extends GenericFilterBean {
                 String authToken = RequestUtil.getAuthorizationToken(request);
                 firebaseToken = firebaseAuth.verifyIdToken(authToken);
 
-                log.debug("Request URI: {}", request.getRequestURI());
                 if (request.getRequestURI().toString().equals("/api/v1/user/signup")) {
                     chain.doFilter(servletRequest, servletResponse);
                 }
@@ -59,7 +59,7 @@ public class JwtFilter extends GenericFilterBean {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                log.debug("Request URI={}, User={}", request.getRequestURI(), authentication.getPrincipal().toString());
+                log.debug("Request URI={}, User={}", request.getRequestURI(), ((User) authentication.getPrincipal()).getEmail());
                 log.debug("\tRequest Remote Info={}:{}", request.getRemoteAddr(), request.getRemotePort());
             } catch (IllegalArgumentException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

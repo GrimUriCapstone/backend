@@ -22,6 +22,8 @@ public class ImageControllerImpl implements ImageController {
     @PostMapping("/generate")
     @Override
     public ResponseEntity<String> imageGenerateComplete(@RequestBody ImageRequestDto.Complete request) {
+        log.debug("\tRequest Body: {}", request.toString());
+
         imageService.saveImageWithDiary(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");

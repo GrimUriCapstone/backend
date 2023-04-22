@@ -12,6 +12,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -131,6 +132,10 @@ public class DiaryResponseDto {
         }
 
         public static List<Tag> listOf(Diary diary) {
+            if (diary.getShortContent() == null) {
+                return Collections.emptyList();
+            }
+
             return Arrays.stream(diary.getShortContent().split(","))
                     .map(Tag::of)
                     .collect(Collectors.toList());
@@ -144,10 +149,10 @@ public class DiaryResponseDto {
     @Schema(description = "이미지의 정보이다. 이미지의 id와 URL로 이루어져있다.")
     public static class ImageUrl {
 
-        @Schema(description = SchemaDescriptionUtils.ImageUrl.imageId)
+        @Schema(description = SchemaDescriptionUtils.Image.imageId)
         private Long imageId;
 
-        @Schema(description = SchemaDescriptionUtils.ImageUrl.imageUrl)
+        @Schema(description = SchemaDescriptionUtils.Image.imageUrl)
         private String imageUrl;
 
         public static ImageUrl of(Image image) {

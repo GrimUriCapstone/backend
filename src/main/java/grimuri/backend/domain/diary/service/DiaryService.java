@@ -6,6 +6,7 @@ import grimuri.backend.domain.diary.DiaryRepository;
 import grimuri.backend.domain.diary.dto.DiaryMessageDto;
 import grimuri.backend.domain.diary.dto.DiaryRequestDto;
 import grimuri.backend.domain.diary.dto.DiaryResponseDto;
+import grimuri.backend.domain.image.Image;
 import grimuri.backend.domain.image.ImageRepository;
 import grimuri.backend.domain.user.User;
 import grimuri.backend.domain.user.UserRepository;
@@ -32,7 +33,7 @@ public class DiaryService {
     private final ImageRepository imageRepository;
 
     private final SqsSenderService senderService;
-
+    
     /**
      * 일기의 제목과 내용을 수정한다. 이미지는 재생성되지 않는다.
      * @param email 사용자의 email (PK)
@@ -75,6 +76,53 @@ public class DiaryService {
 
         diaryRepository.delete(findDiary);
     }
+    
+    /**
+     * 일기의 후보 이미지들 중 하나를 대표 이미지로 선택한다. diaryId로 일기와 일기의 후보 이미지 목록을 조회한다.
+     * 이후 imageId에 해당하는 이미지만 남기고 나머지 후보 이미지들은 제거한다.
+     * 일기의 selected는 true로 바꾼다.
+     * @param email 사용자의 email (PK)
+     * @param diaryId 대표 이미지를 선택하려는 일기의 diaryId
+     * @param imageId 대표 이미지로 선택하려는 이미지의 imageId
+     */
+    public void selectDiaryImage(String email, Long diaryId, Long imageId) {
+        // diaryId로 Diary 조회
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            log.debug("\t해당 diaryId의 Diary가 존재하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
+        });
+
+        if (!findDiary.getUser().getEmail().equals(email)) {
+            log.debug("\tUser의 Diary가 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
+
+        // 아직 후보 이미지가 생성되지 않은 경우 exception
+        if (!findDiary.getImageCreated()) {
+            log.debug("\t아직 후보 이미지들이 생성되지 않았습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아직 후보 이미지들이 생성되지 않았습니다.");
+        }
+
+        List<Image> imageList = findDiary.getImageList();
+
+        // imageId 존재하는지 확인
+        boolean imageExists = imageList.stream().anyMatch(image -> image.getId().equals(imageId));
+        if (!imageExists) {
+            log.debug("\t해당 이미지가 일기에 존재하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이미지가 일기에 존재하지 않습니다");
+        }
+
+
+        // imageList에서 imageId 빼고 나머지 후보들 제거
+        // TODO: 개선점!
+        for (Image image : imageList) {
+            if (!image.getId().equals(imageId)) {
+                imageRepository.delete(image);
+            }
+        }
+
+        findDiary.setSelected(true);
+    }
 
     /**
      * 사용자의 email 주소와 일기의 diaryId를 통해 사용자의 단건 diary를 조회한 뒤 DiaryResponseDto.DiaryResponse를 반환한다.
@@ -85,10 +133,12 @@ public class DiaryService {
     public DiaryResponseDto.DiaryResponse getDiary(String email, Long diaryId) {
         // diaryId로 Diary 조회
         Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            log.debug("\t해당 diaryId의 Diary가 존재하지 않습니다.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
         });
 
         if (!findDiary.getUser().getEmail().equals(email)) {
+            log.debug("\tUser의 Diary가 아닙니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
         }
 
@@ -109,6 +159,7 @@ public class DiaryService {
      */
     public DiaryResponseDto.Create createDiary(String email, DiaryRequestDto.CreateRequest requestDto) {
         User writer = userRepository.findById(email).orElseThrow(() -> {
+            log.debug("\tUser가 없습니다.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user가 없습니다.");
         });
 
@@ -116,11 +167,13 @@ public class DiaryService {
                 .title(requestDto.getTitle())
                 .originalContent(requestDto.getContent())
                 .selected(false)
+                .imageCreated(false)
                 .user(writer)
                 .build();
         diaryRepository.save(newDiary);
 
         try {
+            log.debug("\tSender Service SendMessage 호출.");
             senderService.sendMessage(DiaryMessageDto.Generate.of(newDiary));
         } catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -205,6 +258,12 @@ public class DiaryService {
 
         if (!diary.getUser().getEmail().equals(email)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
+
+        // 아직 후보 이미지가 생성되지 않은 경우 exception
+        if (!diary.getImageCreated()) {
+            log.debug("\t아직 후보 이미지들이 생성되지 않았습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아직 후보 이미지들이 생성되지 않았습니다.");
         }
 
         // 해당 diaryId가 대표 이미지를 선택했는지 여부 조회

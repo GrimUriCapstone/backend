@@ -42,6 +42,9 @@ public class Diary extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean selected;
 
+    @Column(nullable = false)
+    private Boolean imageCreated;
+
     public void saveTags(String tagStr) {
         this.shortContent = tagStr;
     }
@@ -52,5 +55,13 @@ public class Diary extends BaseTimeEntity {
 
     public void setOriginalContent(String originalContent) {
         this.originalContent = originalContent;
+    }
+    
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
+
+    public void setImageCreated(Boolean imageCreated) {
+        this.imageCreated = imageCreated;
     }
 }
