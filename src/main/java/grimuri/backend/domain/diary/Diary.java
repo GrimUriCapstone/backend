@@ -45,4 +45,12 @@ public class Diary extends BaseTimeEntity {
     public void saveTags(String tagStr) {
         this.shortContent = tagStr;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setOriginalContent(String originalContent) {
+        this.originalContent = originalContent;
+    }
 }

@@ -28,6 +28,22 @@ public class DiaryControllerImpl implements DiaryController {
     private final DiaryService diaryService;
 
     /**
+     * 일기의 제목과 내용을 수정한다. 이미지는 재생성되지 않는다.
+     * @param diaryId 수정하려는 일기의 diaryId
+     * @param request DiaryRequestDto.ModifyRequest 수정 제목과 수정 내용
+     * @return DiaryResponseDto.DiaryResponse 수정된 일기의 내용
+     */
+    @PutMapping("/{diaryId")
+    public ResponseEntity<DiaryResponseDto.DiaryResponse> modifyDiary(@PathVariable Long diaryId,
+                                                                      @RequestBody DiaryRequestDto.ModifyRequest request) {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        DiaryResponseDto.DiaryResponse modifyResponse = diaryService.modifyDiary(loginUser.getEmail(), diaryId, request);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(modifyResponse);
+    }
+
+    /**
      * 로그인된 사용자의 diaryId에 해당하는 일기를 삭제한다.
      * @param diaryId 삭제하려는 일기의 diaryId
      * @return "success" String

@@ -34,6 +34,32 @@ public class DiaryService {
     private final SqsSenderService senderService;
 
     /**
+     * 일기의 제목과 내용을 수정한다. 이미지는 재생성되지 않는다.
+     * @param email 사용자의 email (PK)
+     * @param diaryId 수정하려는 일기의 diaryId
+     * @param requestDto DiaryRequestDto.ModifyRequest 수정 제목과 수정 내용
+     * @return DiaryResponseDto.DiaryResponse 수정된 일기의 내용
+     */
+    public DiaryResponseDto.DiaryResponse modifyDiary(String email, Long diaryId, DiaryRequestDto.ModifyRequest requestDto) {
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
+        });
+
+        if (!findDiary.getUser().getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
+        }
+
+        findDiary.setTitle(requestDto.getTitle());
+        findDiary.setOriginalContent(requestDto.getContent());
+
+        if (findDiary.getSelected()) {
+            return DiaryResponseDto.DiaryResponse.imageSelectedOf(findDiary);
+        } else {
+            return DiaryResponseDto.DiaryResponse.imageUnSelectedOf(findDiary);
+        }
+    }
+
+    /**
      * 사용자의 email 주소와 일기의 diaryId를 통해 사용자의 단건 일기를 삭제한다.
      * @param email 사용자의 email (PK)
      * @param diaryId 삭제하려는 일기의 diaryId
