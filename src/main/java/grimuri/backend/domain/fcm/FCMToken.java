@@ -27,7 +27,14 @@ public class FCMToken extends BaseTimeEntity {
     @Column
     private LocalDateTime lastLogin;
 
+    @Column
+    private Long failCount;
+
     public void setLastLogin(LocalDateTime localDateTime) {
         this.lastLogin = localDateTime;
+    }
+
+    public void setFailCount(Long count) {
+        this.failCount = count;
     }
 }

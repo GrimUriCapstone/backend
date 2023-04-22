@@ -65,6 +65,7 @@ public class FCMTokenService {
                 .token(fcmTokenStr)
                 .user(user)
                 .lastLogin(LocalDateTime.now())
+                .failCount(0L)
                 .build();
 
         fcmTokenRepository.save(newToken);
