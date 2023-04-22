@@ -5,6 +5,7 @@ import grimuri.backend.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,4 +23,11 @@ public class FCMToken extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_pk", nullable = false)
     private User user;
+
+    @Column
+    private LocalDateTime lastLogin;
+
+    public void setLastLogin(LocalDateTime localDateTime) {
+        this.lastLogin = localDateTime;
+    }
 }
