@@ -16,6 +16,26 @@ import org.springframework.web.bind.annotation.*;
 public interface UserController {
 
     @Operation(
+            summary = "로그아웃 시 FCM Token 정보 삭제",
+            description = "클라이언트에서 명시적으로 로그아웃 시, 해당 기기의 FCM Token 정보를 삭제한다.",
+            tags = { "UserController" }
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK.",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "User의 FCM Token이 아님.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, 유효하지 않은 토큰임.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found, FCM Token을 찾을 수 없음.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(schema = @Schema(hidden = true)))
+    })
+    @ResponseStatus(HttpStatus.OK)
+    ResponseEntity<?> logout(@RequestBody UserRequestDto.FCMTokenRequest tokenRequest);
+
+    @Operation(
             summary = "로그인한 사용자의 FCM Token 정보 등록",
             description = "로그인한 뒤, Notification을 위해 사용자의 FCM Token을 서버에 등록한다.",
             tags = { "UserController" }
