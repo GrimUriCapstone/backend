@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Arrays;
 
 @Component
@@ -23,19 +24,18 @@ public class RateLimitAspect {
 
     private final RateLimiter rateLimiter;
 
-    @Pointcut("within(grimuri.backend.domain.user.controller.UserControllerImpl)")
+    // TODO: 적용 대상 API 구분
+    @Pointcut("within(grimuri.backend.domain.diary.controller..*)")
     public void onRequest() {}
 
-    @Around("onRequest()")
-    public Object exampleRateLimit(ProceedingJoinPoint pjp) throws Throwable {
-        log.debug("\tAround: doSomething");
+    @Pointcut("execution(* grimuri.backend.domain.user.controller.UserControllerImpl.*(..))")
+    public void onSignupAndLogin() {}
 
-        Arrays.stream(pjp.getArgs()).forEach(a -> log.debug("\targ: {}", a));
+    @Around("onSignupAndLogin()")
+    public Object signupAndLoginLimit(ProceedingJoinPoint pjp) throws Throwable {
+        log.debug("\tAround: signupAndLoginLimit,\tMethod: {}", pjp.getSignature().getName());
 
-        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = loginUser.getEmail();
-
-        Bucket bucket = rateLimiter.resolveBucket(email);
+        Bucket bucket = rateLimiter.resolveBucket(pjp.getSignature(), 3L, 1L, Duration.ofMinutes(1));
         if (bucket.tryConsume(1L)) {
             log.debug("\t>>> Remain bucket Count : {}", bucket.getAvailableTokens());
 
@@ -46,4 +46,27 @@ public class RateLimitAspect {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("too many requests");
         }
     }
+
+    @Around("onRequest()")
+    public Object onRequestLimit(ProceedingJoinPoint pjp) throws Throwable {
+        log.debug("\tAround: onRequestLimit,\tMethod: {}", pjp.getSignature().getName());
+
+        log.debug("\targs: {}", Arrays.stream(pjp.getArgs()));
+
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = loginUser.getEmail();
+
+        Bucket bucket = rateLimiter.resolveBucket(email, pjp.getSignature(), 3L, 1L, Duration.ofMinutes(1));
+        if (bucket.tryConsume(1L)) {
+            log.debug("\t>>> Remain bucket Count : {}", bucket.getAvailableTokens());
+
+            return pjp.proceed(pjp.getArgs());
+        } else {
+            log.debug("\t>>> Exhausted Limit in Simple Bucket");
+
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("too many requests");
+        }
+    }
+
+
 }
