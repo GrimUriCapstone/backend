@@ -24,6 +24,26 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final FCMTokenService fcmTokenService;
 
+    /**
+     * 클라이언트에서 명시적으로 로그아웃 시 호출한다. 호출 시 사용자의 해당 기기의 FCM Token 정보를 삭제한다.
+     * @param tokenRequest 삭제하려는 FCM Token
+     * @return ResponseEntity
+     */
+    @PostMapping("/logout")
+    @Override
+    public ResponseEntity<?> logout(@RequestBody UserRequestDto.FCMTokenRequest tokenRequest) {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        fcmTokenService.deleteFCMToken(loginUser.getEmail(), tokenRequest.getFcm_token());
+
+        return ResponseEntity.status(HttpStatus.OK).body("logout success");
+    }
+
+    /**
+     * 클라이언트 로그인 시 해당 기기의 FCM Token 정보를 사용자 정보와 함께 저장한다.
+     * @param tokenRequest 저장하려는 FCM Token
+     * @return ResponseEntity
+     */
     @PostMapping("/fcmtoken")
     @Override
     public ResponseEntity<?> postLoginFCMToken(@RequestBody UserRequestDto.FCMTokenRequest tokenRequest) {
