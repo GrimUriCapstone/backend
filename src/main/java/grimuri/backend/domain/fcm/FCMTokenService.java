@@ -23,6 +23,23 @@ public class FCMTokenService {
     private final UserRepository userRepository;
 
     /**
+     * 사용자의 특정 FCM Token 정보를 삭제한다.
+     * @param email 삭제하려는 FCM Token의 사용자의 email (PK)
+     * @param fcmTokenStr FCM Token 문자열
+     */
+    public void deleteFCMToken(String email, String fcmTokenStr) {
+        FCMToken fcmToken = fcmTokenRepository.findByToken(fcmTokenStr).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FCM Token Not Found");
+        });
+
+        if (fcmToken.getUser().getEmail().equals(email)) {
+            fcmTokenRepository.delete(fcmToken);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 FCM Token이 아닙니다.");
+        }
+    }
+
+    /**
      * FCM Token - 사용자 정보를 DB에 저장한다. 기존에 존재하는 Token-사용자 정보라면 마지막 로그인 시간을 갱신한다.
      * Token은 존재하지만 사용자 정보가 다르다면 해당 정보를 삭제하고 새로운 사용자 정보로 FCM Token을 재생성한다.
      * 아예 존재하지 않는 FCM Token - 사용자 정보라면 새로 생성하여 저장한다.

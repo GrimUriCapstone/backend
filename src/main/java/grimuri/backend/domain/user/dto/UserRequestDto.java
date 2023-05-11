@@ -22,7 +22,7 @@ public class UserRequestDto {
     @AllArgsConstructor
     @Builder
     @ToString
-    @Schema(description = "로그인 후 FCM 토큰 정보 전송")
+    @Schema(description = "로그인/로그아웃 시 FCM 토큰 정보 전송")
     public static class FCMTokenRequest {
 
         @Schema(description = SchemaDescriptionUtils.FCMToken.fcm_token)
