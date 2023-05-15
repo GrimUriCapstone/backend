@@ -34,11 +34,15 @@ public class DiaryResponseDto {
         @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
         private String originalContent;
 
+        @Schema(description = SchemaDescriptionUtils.Diary.open)
+        private Boolean open;
+
         public static Create of(Diary diary) {
             return Create.builder()
                     .diaryId(diary.getId())
                     .title(diary.getTitle())
                     .originalContent(diary.getOriginalContent())
+                    .open(diary.getOpen())
                     .build();
         }
     }
@@ -71,6 +75,9 @@ public class DiaryResponseDto {
         @Schema(description = SchemaDescriptionUtils.Diary.mainImageUrl)
         private ImageUrl mainImageUrl;
 
+        @Schema(description = SchemaDescriptionUtils.Diary.open)
+        private Boolean open;
+
         @Schema(description = SchemaDescriptionUtils.Diary.createdAt)
         private LocalDateTime createdAt;
 
@@ -87,6 +94,7 @@ public class DiaryResponseDto {
                     .imageSelected(true)
                     .candidateImageUrls(new ArrayList<>())
                     .mainImageUrl(ImageUrl.of(diary.getImageList().get(0)))
+                    .open(diary.getOpen())
                     .createdAt(diary.getCreatedAt())
                     .modifiedAt(diary.getModifiedAt())
                     .build();
@@ -103,6 +111,7 @@ public class DiaryResponseDto {
                             .stream().map(ImageUrl::of)
                             .collect(Collectors.toList()))
                     .mainImageUrl(null)
+                    .open(diary.getOpen())
                     .createdAt(diary.getCreatedAt())
                     .modifiedAt(diary.getModifiedAt())
                     .build();
