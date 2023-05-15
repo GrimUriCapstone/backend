@@ -2,6 +2,7 @@ package grimuri.backend.domain.diary;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     Page<Diary> findByUser_Email(String username, Pageable pageable);
 
+    @EntityGraph(attributePaths = { "user" })
+    Page<Diary> findByOpenAndSelected(Boolean open, Boolean selected, Pageable pageable);
 }

@@ -33,7 +33,13 @@ public class DiaryService {
     private final ImageRepository imageRepository;
 
     private final SqsSenderService senderService;
-    
+
+    public Page<DiaryResponseDto.Recent> getRecentDiaries(Pageable pageable) {
+        Page<Diary> findDiaryPage = diaryRepository.findByOpenAndSelected(true, true, pageable);
+
+        return findDiaryPage.map(DiaryResponseDto.Recent::of);
+    }
+
     /**
      * 일기의 제목과 내용을 수정한다. 이미지는 재생성되지 않는다.
      * @param email 사용자의 email (PK)

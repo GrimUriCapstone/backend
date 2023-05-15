@@ -22,6 +22,55 @@ public class DiaryResponseDto {
     @AllArgsConstructor
     @Builder
     @ToString
+    @Schema(description = "최근 작성 일기")
+    public static class Recent {
+
+        @Schema(description = SchemaDescriptionUtils.Diary.diaryId)
+        private Long diaryId;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.title)
+        private String title;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.writerEmail)
+        private String writerEmail;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.writerNickname)
+        private String writerNickname;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
+        private String originalContent;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.tags)
+        private List<Tag> tags;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.mainImageUrl)
+        private ImageUrl mainImageUrl;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.createdAt)
+        private LocalDateTime createdAt;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.modifiedAt)
+        private LocalDateTime modifiedAt;
+
+        public static Recent of(Diary diary) {
+            return Recent.builder()
+                    .diaryId(diary.getId())
+                    .title(diary.getTitle())
+                    .writerEmail(diary.getUser().getEmail())
+                    .writerNickname(diary.getUser().getNickname())
+                    .originalContent(diary.getOriginalContent())
+                    .tags(Tag.listOf(diary))
+                    .mainImageUrl(ImageUrl.of(diary.getImageList().get(0)))
+                    .createdAt(diary.getCreatedAt())
+                    .modifiedAt(diary.getModifiedAt())
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    @ToString
     @Schema(description = "사용자가 생성한 일기 항목의 정보")
     public static class Create {
 
