@@ -24,6 +24,9 @@ public class DiaryRequestDto {
         @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
         private String content;
 
+        @Schema(description = SchemaDescriptionUtils.Diary.open)
+        private Boolean open;
+
     }
 
     @Getter
@@ -40,6 +43,9 @@ public class DiaryRequestDto {
         @NotBlank(message = "content를 입력해주세요.")
         @Schema(description = SchemaDescriptionUtils.Diary.originalContent)
         private String content;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.open)
+        private Boolean open;
     }
 
 }
