@@ -27,6 +27,14 @@ public class DiaryControllerImpl implements DiaryController {
     private final ImageService imageService;
     private final DiaryService diaryService;
 
+    @GetMapping("/recent")
+    @Override
+    public ResponseEntity<Page<DiaryResponseDto.Recent>> getRecentDiaries(Pageable pageable) {
+        Page<DiaryResponseDto.Recent> response = diaryService.getRecentDiaries(pageable);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     /**
      * 일기의 제목과 내용을 수정한다. 이미지는 재생성되지 않는다.
      * @param diaryId 수정하려는 일기의 diaryId

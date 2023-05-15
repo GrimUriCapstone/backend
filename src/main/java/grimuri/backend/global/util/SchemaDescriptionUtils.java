@@ -43,6 +43,8 @@ public class SchemaDescriptionUtils {
         public static final String createdAt = "일기 작성 시간";
         public static final String modifiedAt = "일기 수정 시간";
         public static final String open = "공개 여부";
+        public static final String writerNickname = "작성자 닉네임";
+        public static final String writerEmail = "작성자 이메일";
     }
 
     public static class Tag {
