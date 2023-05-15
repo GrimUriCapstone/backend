@@ -28,6 +28,24 @@ import java.util.List;
 public interface DiaryController {
 
     @Operation(
+            summary = "공개 및 대표이미지 선택 완료 일기 페이지 조회",
+            description = "페이지의 항목 개수, 페이지 인덱스, ASC/DESC를 지정하여 일기 항목 페이지를 조회한다.",
+            tags = { "DiaryController" }
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok. content의 내용은 Recent 스키마를 참조.",
+                    content = @Content(schema = @Schema(implementation = Page.class, subTypes = DiaryResponseDto.Recent.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, 권한 없음.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(schema = @Schema(hidden = true)))
+    })
+    @PageableAsParameter
+    @ResponseStatus(HttpStatus.OK)
+    ResponseEntity<Page<DiaryResponseDto.Recent>> getRecentDiaries(
+            @Parameter(schema = @Schema(hidden = true)) Pageable pageable);
+
+    @Operation(
             summary = "일기 수정",
             description = "일기의 제목과 내용을 수정한다. 생성된 기존 이미지는 재생성하지 않는다.",
             tags = { "DiaryController" }
