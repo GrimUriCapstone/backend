@@ -52,6 +52,7 @@ public class DiaryService {
 
         findDiary.setTitle(requestDto.getTitle());
         findDiary.setOriginalContent(requestDto.getContent());
+        findDiary.setOpen(requestDto.getOpen());
 
         if (findDiary.getSelected()) {
             return DiaryResponseDto.DiaryResponse.imageSelectedOf(findDiary);
@@ -137,15 +138,21 @@ public class DiaryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 diaryId의 Diary가 존재하지 않습니다.");
         });
 
-        if (!findDiary.getUser().getEmail().equals(email)) {
+        Boolean isOpen = findDiary.getOpen();
+        Boolean isOwned = findDiary.getUser().getEmail().equals(email);
+
+        if (isOwned || isOpen) {
+            // 공개이거나 자신의 것인 경우
+
+            if (findDiary.getSelected()) {
+                return DiaryResponseDto.DiaryResponse.imageSelectedOf(findDiary);
+            } else {
+                return DiaryResponseDto.DiaryResponse.imageUnSelectedOf(findDiary);
+            }
+        } else {
+            // 공개도 아니고 자신의 것도 아닌 경우
             log.debug("\tUser의 Diary가 아닙니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
-        }
-
-        if (findDiary.getSelected()) {
-            return DiaryResponseDto.DiaryResponse.imageSelectedOf(findDiary);
-        } else {
-            return DiaryResponseDto.DiaryResponse.imageUnSelectedOf(findDiary);
         }
     }
 
@@ -169,6 +176,7 @@ public class DiaryService {
                 .selected(false)
                 .imageCreated(false)
                 .user(writer)
+                .open(requestDto.getOpen())
                 .build();
         diaryRepository.save(newDiary);
 
