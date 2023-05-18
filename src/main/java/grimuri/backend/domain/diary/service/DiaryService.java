@@ -203,7 +203,7 @@ public class DiaryService {
 
         try {
             log.debug("\tSender Service SendMessage 호출.");
-            senderService.sendMessage(DiaryMessageDto.Generate.of(newDiary));
+            senderService.sendMessage(DiaryMessageDto.Generate.of(newDiary, requestDto.getThemeId(), requestDto.getStyleId()));
         } catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }

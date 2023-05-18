@@ -27,6 +27,11 @@ public class DiaryRequestDto {
         @Schema(description = SchemaDescriptionUtils.Diary.open)
         private Boolean open;
 
+        @Schema(description = SchemaDescriptionUtils.Diary.styleId)
+        private Integer styleId;
+
+        @Schema(description = SchemaDescriptionUtils.Diary.themeId)
+        private Integer themeId;
     }
 
     @Getter
