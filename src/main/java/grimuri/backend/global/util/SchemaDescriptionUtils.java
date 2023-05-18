@@ -47,6 +47,8 @@ public class SchemaDescriptionUtils {
         public static final String open = "공개 여부";
         public static final String writerNickname = "작성자 닉네임";
         public static final String writerEmail = "작성자 이메일";
+        public static final String styleId = "그림의 스타일";
+        public static final String themeId = "인물화, 배경화, 정물화";
     }
 
     public static class Tag {
