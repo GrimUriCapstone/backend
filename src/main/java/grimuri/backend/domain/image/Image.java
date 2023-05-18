@@ -21,7 +21,7 @@ public class Image extends BaseTimeEntity {
     private String sourceUrl;
 
     @Column(nullable = false)
-    private String filename;
+    private String filepath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)

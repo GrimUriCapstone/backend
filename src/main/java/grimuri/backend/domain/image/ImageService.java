@@ -52,7 +52,7 @@ public class ImageService {
         request.getImages().forEach(image -> {
             Image eachImage = Image.builder()
                     .sourceUrl(image.getUrl())
-                    .filename(image.getFilename())
+                    .filepath(image.getFilepath())
                     .diary(findDiary)
                     .build();
 

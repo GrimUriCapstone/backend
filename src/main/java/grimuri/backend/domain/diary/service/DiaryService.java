@@ -39,7 +39,6 @@ public class DiaryService {
     private final SqsSenderService senderService;
 
     private final static String BUCKET_NAME = "grim-uri";
-    private final static String BUCKET_PATH = "save/";
 
     public Page<DiaryResponseDto.Recent> getRecentDiaries(Pageable pageable) {
         Page<Diary> findDiaryPage = diaryRepository.findByOpenAndSelected(true, true, pageable);
@@ -133,7 +132,7 @@ public class DiaryService {
         for (Image image : imageList) {
             if (!image.getId().equals(imageId)) {
 
-                BlobId blobId = BlobId.of(BUCKET_NAME, BUCKET_PATH + image.getFilename());
+                BlobId blobId = BlobId.of(BUCKET_NAME, image.getFilepath());
                 blobIds.add(blobId);
 
                 imageRepository.delete(image);

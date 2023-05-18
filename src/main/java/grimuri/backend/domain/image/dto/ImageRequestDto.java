@@ -40,8 +40,8 @@ public class ImageRequestDto {
         @Schema(description = SchemaDescriptionUtils.ImageComplete.url)
         private String url;
 
-        @Schema(description = SchemaDescriptionUtils.ImageComplete.filename)
-        private String filename;
+        @Schema(description = SchemaDescriptionUtils.ImageComplete.filepath)
+        private String filepath;
     }
 
     @Getter
