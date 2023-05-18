@@ -14,7 +14,9 @@ public class SchemaDescriptionUtils {
 
     public static class ImageComplete {
         public static final String tags = "일기의 요약된 태그 목록";
-        public static final String images = "이미지들의 스토리지 접근 URL";
+        public static final String url = "이미지들의 스토리지 접근 URL";
+        public static final String filename = "스토리지에 저장된 이미지 파일명";
+        public static final String images = "스토리지에 저장된 이미지 정보";
     }
 
     public static class UserRegister {
