@@ -18,11 +18,17 @@ public class DiaryMessageDto {
         private String originalContent;
         private String userEmail;
 
-        public static DiaryMessageDto.Generate of(Diary diary) {
+        private Integer themeId;
+
+        private Integer styleId;
+
+        public static DiaryMessageDto.Generate of(Diary diary, Integer themeId, Integer styleId) {
             return Generate.builder()
                     .diaryId(diary.getId())
                     .originalContent(diary.getOriginalContent())
                     .userEmail(diary.getUser().getEmail())
+                    .themeId(themeId)
+                    .styleId(styleId)
                     .build();
         }
     }
