@@ -20,6 +20,9 @@ public class Image extends BaseTimeEntity {
     @Column(nullable = false)
     private String sourceUrl;
 
+    @Column(nullable = false)
+    private String filename;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;

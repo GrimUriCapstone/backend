@@ -49,9 +49,10 @@ public class ImageService {
         findDiary.saveTags(tagStr);
         findDiary.setImageCreated(true);
 
-        request.getImages().forEach(url -> {
+        request.getImages().forEach(image -> {
             Image eachImage = Image.builder()
-                    .sourceUrl(url)
+                    .sourceUrl(image.getUrl())
+                    .filename(image.getFilename())
                     .diary(findDiary)
                     .build();
 
