@@ -26,7 +26,22 @@ public class ImageRequestDto {
         private String userEmail;
 
         @Schema(description = SchemaDescriptionUtils.ImageComplete.images)
-        private List<String> images;
+        private List<FileBlob> images;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
+    @Schema(description = "생성 이미지 파일 정보")
+    public static class FileBlob {
+
+        @Schema(description = SchemaDescriptionUtils.ImageComplete.url)
+        private String url;
+
+        @Schema(description = SchemaDescriptionUtils.ImageComplete.filename)
+        private String filename;
     }
 
     @Getter

@@ -1,6 +1,9 @@
 package grimuri.backend.domain.diary.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import grimuri.backend.domain.diary.Diary;
 import grimuri.backend.domain.diary.DiaryRepository;
 import grimuri.backend.domain.diary.dto.DiaryMessageDto;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +37,9 @@ public class DiaryService {
     private final ImageRepository imageRepository;
 
     private final SqsSenderService senderService;
+
+    private final static String BUCKET_NAME = "grim-uri";
+    private final static String BUCKET_PATH = "save/";
 
     public Page<DiaryResponseDto.Recent> getRecentDiaries(Pageable pageable) {
         Page<Diary> findDiaryPage = diaryRepository.findByOpenAndSelected(true, true, pageable);
@@ -119,14 +126,22 @@ public class DiaryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이미지가 일기에 존재하지 않습니다");
         }
 
+        Storage storage = StorageOptions.newBuilder().build().getService();
+        List<BlobId> blobIds = new ArrayList<>();
 
         // imageList에서 imageId 빼고 나머지 후보들 제거
-        // TODO: 개선점!
         for (Image image : imageList) {
             if (!image.getId().equals(imageId)) {
+
+                BlobId blobId = BlobId.of(BUCKET_NAME, BUCKET_PATH + image.getFilename());
+                blobIds.add(blobId);
+
                 imageRepository.delete(image);
             }
         }
+
+        List<Boolean> deleteResultList = storage.delete(blobIds);
+        log.debug("delete Storage Image Results: {}", deleteResultList);
 
         findDiary.setSelected(true);
     }
