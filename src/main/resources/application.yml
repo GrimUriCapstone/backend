@@ -17,3 +17,7 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /api/v1/**
+
+firebase:
+  bucket:
+    name: ${BUCKET_NAME}

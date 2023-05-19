@@ -2,6 +2,7 @@ package grimuri.backend.domain.diary.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import grimuri.backend.domain.diary.Diary;
@@ -15,6 +16,7 @@ import grimuri.backend.domain.user.User;
 import grimuri.backend.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -38,7 +40,8 @@ public class DiaryService {
 
     private final SqsSenderService senderService;
 
-    private final static String BUCKET_NAME = "grim-uri";
+    @Value("${firebase.bucket.name}")
+    private String BUCKET_NAME;
 
     public Page<DiaryResponseDto.Recent> getRecentDiaries(Pageable pageable) {
         Page<Diary> findDiaryPage = diaryRepository.findByOpenAndSelected(true, true, pageable);
