@@ -1,10 +1,7 @@
 package grimuri.backend.domain.diary.dto;
 
 import grimuri.backend.domain.diary.Diary;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 public class DiaryMessageDto {
@@ -13,6 +10,7 @@ public class DiaryMessageDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @ToString
     public static class Generate {
         private Long diaryId;
         private String originalContent;
