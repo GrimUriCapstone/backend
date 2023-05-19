@@ -32,7 +32,7 @@ public class SqsSenderService {
      * @throws JsonProcessingException
      */
     public SendMessageResult sendMessage(DiaryMessageDto.Generate message) throws JsonProcessingException {
-        log.debug("\tGenerate Message: {}", message.toString());
+        log.debug("\tGenerate Message: {}", message);
         SendMessageRequest sendMessageRequest = new SendMessageRequest(sqsEndpoint, objectMapper.writeValueAsString(message));
 
         return amazonSQS.sendMessage(sendMessageRequest);
