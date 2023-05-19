@@ -59,8 +59,9 @@ public class JwtFilter extends GenericFilterBean {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                log.debug("Request URI={}, User={}", request.getRequestURI(), ((User) authentication.getPrincipal()).getEmail());
-                log.debug("\tRequest Remote Info={}:{}", request.getRemoteAddr(), request.getRemotePort());
+                log.debug("{} {} from User {} at {}:{}",
+                        request.getMethod(), request.getRequestURI(),
+                        ((User) authentication.getPrincipal()).getEmail(), request.getRemoteAddr(), request.getRemotePort());
             } catch (IllegalArgumentException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.setContentType("application/json");
@@ -82,8 +83,8 @@ public class JwtFilter extends GenericFilterBean {
             }
         } else {
             if (!request.getRequestURI().startsWith("/swagger-ui") && !request.getRequestURI().startsWith("/api-docs")) {
-                log.debug("Request URI={}, Authorization 헤더 없음.", request.getRequestURI());
-                log.debug("\tRequest Remote Info={}:{}", request.getRemoteAddr(), request.getRemotePort());
+                log.debug("{} {} from {}:{}, Authorization 헤더 없음.",
+                        request.getMethod(), request.getRequestURI(), request.getRemoteAddr(), request.getRemotePort());
             }
         }
 
