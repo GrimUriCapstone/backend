@@ -35,7 +35,7 @@ public class Diary extends BaseTimeEntity {
     @Column(nullable = true)
     private String shortContent;
 
-    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "diary")
     @BatchSize(size = 10)
     private List<Image> imageList = new ArrayList<>();
 
