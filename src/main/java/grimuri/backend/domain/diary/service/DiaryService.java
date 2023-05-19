@@ -87,6 +87,7 @@ public class DiaryService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User의 Diary가 아닙니다.");
         }
 
+        imageRepository.deleteAllByDiary(findDiary);
         diaryRepository.delete(findDiary);
     }
     
