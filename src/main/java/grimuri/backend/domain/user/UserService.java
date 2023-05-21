@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import grimuri.backend.domain.user.dto.UserRequestDto;
-import grimuri.backend.domain.user.dto.UserResponseDto;
 import grimuri.backend.global.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +72,15 @@ public class UserService implements UserDetailsService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    public void updateProfileImage(User loginUser, String profileImage) {
+        User findUser = userRepository.findById(loginUser.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found"));
+
+        if (!findUser.getProfileImage().equals(profileImage)) {
+            findUser.setProfileImage(profileImage);
         }
     }
 }

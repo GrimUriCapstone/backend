@@ -30,11 +30,18 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @Column
+    private String profileImage;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(getRole().getKey());
 
         return Arrays.asList(authority);
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     @Override
