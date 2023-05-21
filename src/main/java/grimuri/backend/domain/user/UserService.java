@@ -79,7 +79,7 @@ public class UserService implements UserDetailsService {
         User findUser = userRepository.findById(loginUser.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found"));
 
-        if (!findUser.getProfileImage().equals(profileImage)) {
+        if (findUser.getProfileImage() == null || !findUser.getProfileImage().equals(profileImage)) {
             findUser.setProfileImage(profileImage);
         }
     }
