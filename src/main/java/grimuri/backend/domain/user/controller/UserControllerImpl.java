@@ -81,6 +81,7 @@ public class UserControllerImpl implements UserController {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         FirebaseToken firebaseToken = userService.getFirebaseToken(firebaseAuth, authorization);
+        userService.updateProfileImage(loginUser, firebaseToken.getPicture());
 
         return ResponseEntity.status(HttpStatus.OK).body(UserResponseDto.UserInfo.of(loginUser, firebaseToken.getPicture()));
     }

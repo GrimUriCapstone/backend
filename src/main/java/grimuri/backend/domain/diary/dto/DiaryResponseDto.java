@@ -46,6 +46,9 @@ public class DiaryResponseDto {
         @Schema(description = SchemaDescriptionUtils.Diary.mainImageUrl)
         private ImageUrl mainImageUrl;
 
+        @Schema(description = SchemaDescriptionUtils.UserInfo.profileImage)
+        private String profileImage;
+
         @Schema(description = SchemaDescriptionUtils.Diary.createdAt)
         private LocalDateTime createdAt;
 
@@ -61,6 +64,7 @@ public class DiaryResponseDto {
                     .originalContent(diary.getOriginalContent())
                     .tags(Tag.listOf(diary))
                     .mainImageUrl(ImageUrl.of(diary.getImageList().get(0)))
+                    .profileImage(diary.getUser().getProfileImage())
                     .createdAt(diary.getCreatedAt())
                     .modifiedAt(diary.getModifiedAt())
                     .build();
