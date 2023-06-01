@@ -40,7 +40,6 @@ public interface DiaryController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(schema = @Schema(hidden = true)))
     })
-    @PageableAsParameter
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<Long> getCount();
 
