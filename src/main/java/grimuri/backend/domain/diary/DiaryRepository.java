@@ -22,4 +22,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     @EntityGraph(attributePaths = { "user" })
     Page<Diary> findByOpenAndSelected(Boolean open, Boolean selected, Pageable pageable);
+
+    Long countByUser_EmailAndImageCreatedIsTrueAndSelectedIsFalse(String email);
 }
