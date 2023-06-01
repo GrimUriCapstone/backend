@@ -27,6 +27,16 @@ public class DiaryControllerImpl implements DiaryController {
     private final ImageService imageService;
     private final DiaryService diaryService;
 
+    @GetMapping("/count")
+    @Override
+    public ResponseEntity<Long> getCount() {
+        User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long count = diaryService.getCount(loginUser.getEmail());
+
+        return ResponseEntity.status(HttpStatus.OK).body(count);
+    }
+
     @GetMapping("/recent")
     @Override
     public ResponseEntity<Page<DiaryResponseDto.Recent>> getRecentDiaries(Pageable pageable) {

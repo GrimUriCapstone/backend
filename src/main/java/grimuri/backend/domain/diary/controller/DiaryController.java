@@ -28,6 +28,23 @@ import java.util.List;
 public interface DiaryController {
 
     @Operation(
+            summary = "이미지는 생성되었으나 대표 이미지를 선택하지 않은 일기 개수 조회",
+            description = "이미지는 생성되었으나 대표 이미지를 선택하지 않은 일기 개수 조회",
+            tags = { "DiaryController" }
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok",
+                    content = @Content(schema = @Schema(implementation = Long.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, 권한 없음.",
+                    content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(schema = @Schema(hidden = true)))
+    })
+    @PageableAsParameter
+    @ResponseStatus(HttpStatus.OK)
+    ResponseEntity<Long> getCount();
+
+    @Operation(
             summary = "공개 및 대표이미지 선택 완료 일기 페이지 조회",
             description = "페이지의 항목 개수, 페이지 인덱스, ASC/DESC를 지정하여 일기 항목 페이지를 조회한다.",
             tags = { "DiaryController" }
