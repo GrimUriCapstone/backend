@@ -2,7 +2,6 @@ package grimuri.backend.domain.diary.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import grimuri.backend.domain.diary.Diary;
@@ -42,6 +41,12 @@ public class DiaryService {
 
     @Value("${firebase.bucket.name}")
     private String BUCKET_NAME;
+
+    public Long getCount(String email) {
+        Long count = diaryRepository.countByUser_EmailAndImageCreatedIsTrueAndSelectedIsFalse(email);
+
+        return count;
+    }
 
     public Page<DiaryResponseDto.Recent> getRecentDiaries(Pageable pageable) {
         Page<Diary> findDiaryPage = diaryRepository.findByOpenAndSelected(true, true, pageable);
