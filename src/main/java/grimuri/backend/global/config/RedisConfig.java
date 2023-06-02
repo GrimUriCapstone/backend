@@ -22,7 +22,9 @@ public class RedisConfig {
     @Bean
     public Config config() {
         Config config = new Config();
-        config.useSingleServer().setAddress(env.getProperty("REDIS_ADDRESS"));
+        config.useSingleServer()
+                .setAddress(env.getProperty("REDIS_ADDRESS"))
+                .setPassword(env.getProperty("REDIS_PASSWORD"));
 
         return config;
     }

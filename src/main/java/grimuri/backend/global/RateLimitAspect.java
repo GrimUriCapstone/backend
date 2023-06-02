@@ -35,7 +35,7 @@ public class RateLimitAspect {
     public Object signupAndLoginLimit(ProceedingJoinPoint pjp) throws Throwable {
         log.debug("\tAround: signupAndLoginLimit,\tMethod: {}", pjp.getSignature().getName());
 
-        Bucket bucket = rateLimiter.resolveBucket(pjp.getSignature(), 3L, 1L, Duration.ofMinutes(1));
+        Bucket bucket = rateLimiter.resolveBucket(pjp.getSignature(), 10L, 1L, Duration.ofMinutes(1));
         if (bucket.tryConsume(1L)) {
             log.debug("\t>>> Remain bucket Count : {}", bucket.getAvailableTokens());
 
