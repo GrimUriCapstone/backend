@@ -56,7 +56,7 @@ public class RateLimitAspect {
         User loginUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = loginUser.getEmail();
 
-        Bucket bucket = rateLimiter.resolveBucket(email, pjp.getSignature(), 1L, 1L, Duration.ofSeconds((long) 1.5));
+        Bucket bucket = rateLimiter.resolveBucket(email, pjp.getSignature(), 100L, 1L, Duration.ofMinutes(1));
         if (bucket.tryConsume(1L)) {
             log.debug("\t>>> Remain bucket Count : {}", bucket.getAvailableTokens());
 
