@@ -131,6 +131,15 @@ public class DiaryResponseDto {
         @Schema(description = SchemaDescriptionUtils.Diary.open)
         private Boolean open;
 
+        @Schema(description = SchemaDescriptionUtils.UserInfo.email)
+        private String email;
+
+        @Schema(description = SchemaDescriptionUtils.UserInfo.username)
+        private String username;
+
+        @Schema(description = SchemaDescriptionUtils.UserInfo.profileImage)
+        private String profileImage;
+
         @Schema(description = SchemaDescriptionUtils.Diary.createdAt)
         private LocalDateTime createdAt;
 
@@ -148,6 +157,9 @@ public class DiaryResponseDto {
                     .candidateImageUrls(new ArrayList<>())
                     .mainImageUrl(ImageUrl.of(diary.getImageList().get(0)))
                     .open(diary.getOpen())
+                    .email(diary.getUser().getEmail())
+                    .username(diary.getUser().getUsername())
+                    .profileImage(diary.getUser().getProfileImage())
                     .createdAt(diary.getCreatedAt())
                     .modifiedAt(diary.getModifiedAt())
                     .build();
@@ -165,6 +177,9 @@ public class DiaryResponseDto {
                             .collect(Collectors.toList()))
                     .mainImageUrl(null)
                     .open(diary.getOpen())
+                    .email(diary.getUser().getEmail())
+                    .username(diary.getUser().getUsername())
+                    .profileImage(diary.getUser().getProfileImage())
                     .createdAt(diary.getCreatedAt())
                     .modifiedAt(diary.getModifiedAt())
                     .build();
