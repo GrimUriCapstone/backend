@@ -43,10 +43,13 @@ public class ImageService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User가 존재하지 않습니다.");
         });
 
-        String tagStr = request.getTags().stream()
-                .map(tag -> tag.getEng() + ":" + tag.getKor())
-                .collect(Collectors.joining(","));
-        findDiary.saveTags(tagStr);
+        if (!request.getTags().isEmpty() && !(request.getTags() == null)) {
+            String tagStr = request.getTags().stream()
+                    .map(tag -> tag.getEng() + ":" + tag.getKor())
+                    .collect(Collectors.joining(","));
+            findDiary.saveTags(tagStr);
+        }
+
         findDiary.setImageCreated(true);
 
         request.getImages().forEach(image -> {
